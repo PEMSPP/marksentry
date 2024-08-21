@@ -1,0 +1,92 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+header {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+header h1 {
+    margin-right: 20px;
+    font-size: 1.5em;
+    color: #333;
+}
+
+header select, header button {
+    margin-right: 10px;
+    padding: 5px 10px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+header button:disabled {
+    background-color: #e0e0e0;
+    cursor: not-allowed;
+}
+
+header select:focus, header button:hover:not(:disabled) {
+    background-color: #f0f0f0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+}
+
+td input[type="number"] {
+    width: 50px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    text-align: center;
+}
+
+td input[type="number"]:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+footer {
+    margin-top: 20px;
+    text-align: right;
+}
+
+footer button {
+    padding: 8px 15px;
+    margin-left: 10px;
+    font-size: 1em;
+    color: #fff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+footer button:hover {
+    background-color: #45a049;
+}

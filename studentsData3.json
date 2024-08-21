@@ -1,0 +1,436 @@
+{
+  
+    "Talaricheruvu": [
+
+        { "studentName": " D.JOHN IZAK ", "penNumber": " 20216709840  ", "section": "A" },
+        { "studentName": " D. BALAJI ", "penNumber": " 20369924917  ", "section": "A" },
+        { "studentName": " T. SIVANAATH ", "penNumber": " 20323008211     ", "section": "A" },
+        { "studentName": " V.HARSHA VARDHAN ", "penNumber": " 20227374147  ", "section": "A" },
+        { "studentName": "B. SAI DHARAM TEJ NAAYAK  ", "penNumber": "20553698459   ", "section": "A" },
+        { "studentName": " G.ISHAL BHARAT ", "penNumber": " 20701804613  ", "section": "A" },
+        { "studentName": "A. KARUN KUMAR   ", "penNumber": " 20856995361 ", "section": "A" },
+        { "studentName": " P. Vamsi ", "penNumber": "  ", "section": "A" },
+        { "studentName": " I Mahammad Amaan ", "penNumber": "   ", "section": "A" },
+        { "studentName": "B.SANJAY  ", "penNumber": "2045644997     ", "section": "A" },
+        { "studentName": "M.V. Sathya Narayana  ", "penNumber": "    ", "section": "A" },
+        { "studentName": "S. Harmendra ", "penNumber": "    ", "section": "A" },
+        { "studentName": " M.DEEKSHITH THRIVIKRAM ", "penNumber": " 20483976755  ", "section": "A" },
+        { "studentName": " B. Guru Venkata Vikas", "penNumber": "   ", "section": "A" },
+        { "studentName": " M. TANEESH REDDY ", "penNumber": " 20250022276  ", "section": "A" },
+        { "studentName": " M. Venkata ParthaSarathi", "penNumber": "   ", "section": "A" },
+        { "studentName": " T. Darsheel ", "penNumber": "  ", "section": "A" },
+        { "studentName": " A.GURU HARIKA ", "penNumber": " 20585336044  ", "section": "A" },
+        { "studentName": "M. ARIVIND NAAYAK  ", "penNumber": "20275981480   ", "section": "A" },
+        { "studentName": " T.JASHANVI ", "penNumber": " 20260720057  ", "section": "A" },
+        { "studentName": " D. DHARSHIKA ", "penNumber": " 20327608796  ", "section": "A" },
+        { "studentName": " K. SWAPNA ", "penNumber": " 20676721298  ", "section": "A" },
+        { "studentName": " P. SIMA KAOUSR ", "penNumber": " 20577657291  ", "section": "A" },
+        { "studentName": "A. Guru Harika ", "penNumber": " 20577657291  ", "section": "A" },
+        { "studentName": " P. MOKSHITHA  ", "penNumber": "20520850235    ", "section": "A" },
+        { "studentName": " M. RUKSAANA KOUSAR ", "penNumber": " 20235709167  ", "section": "A" },
+        { "studentName": " HS FARVEEN ", "penNumber": " 20920363045  ", "section": "A" },
+        { "studentName": " T. RISHWITHA SREE ", "penNumber": " 20420821023  ", "section": "A" },
+        { "studentName": "C.V. Ruchitha Kalyani ", "penNumber": "  ", "section": "A" },
+        { "studentName": " G. Harini ", "penNumber": "  ", "section": "A" },
+        { "studentName": "C.Raghavi ", "penNumber": "  ", "section": "A" },
+        { "studentName": " A. Akshya ", "penNumber": "   ", "section": "A" },
+        { "studentName": " B. kalpana ", "penNumber": " 20420821023  ", "section": "A" },
+        { "studentName": "G. KRANTHI  ", "penNumber": "20649503480   ", "section": "A" },
+        { "studentName": " M. ANNAYA ", "penNumber": "20413703923   ", "section": "A" },
+        { "studentName": " M.ADVITHA REDDY ", "penNumber": " 20464160813  ", "section": "A" },
+        { "studentName": " G. Usha", "penNumber": "  ", "section": "A" },
+        { "studentName": " C. Ramya Sree ", "penNumber": " 20464160813  ", "section": "A" }
+     
+
+    ],
+    
+    "Boyareddypalli": [
+        {
+            "studentName": "A. Prani sri",
+            "penNumber": "20280416229",
+            "section": "A"
+           },
+           {
+            "studentName": "G. Shiva Preetika",
+            "penNumber": "20457144008",
+            "section": "A"
+           },
+           {
+            "studentName": "M. Bhavisya",
+            "penNumber": "20606883574",
+            "section": "A"
+           },
+           {
+            "studentName": "N. Dhanush Reddy",
+            "penNumber": "20981247529",
+            "section": "A"
+           },
+           {
+            "studentName": "G. Madhan Mohan",
+            "penNumber": "20379474458",
+            "section": "A"
+           },
+           {
+            "studentName": "K. Ronav Reddy",
+            "penNumber": "20446566942",
+            "section": "A"
+           },
+           {
+            "studentName": "B. Krishna Mahadev",
+            "penNumber": "20742917180",
+            "section": "A"
+           },
+           {
+            "studentName": "C. Sneha Sree",
+            "penNumber": "20282348922",
+            "section": "A"
+           },
+           {
+            "studentName": "Y. Vishnu Vardhan",
+            "penNumber": "20932809493",
+            "section": "A"
+           },
+           {
+            "studentName": "C Sneha Sri",
+            "penNumber": "20546915769",
+            "section": "A"
+           },
+           {
+            "studentName": "P. Sandhya",
+            "penNumber": "20420694696",
+            "section": "A"
+           },
+           {
+            "studentName": "S. Mahammad Tanveer",
+            "penNumber": "20704974726",
+            "section": "A"
+           },
+           {
+            "studentName": "S Reshma",
+            "penNumber": "20989929796",
+            "section": "A"
+           },
+           {
+            "studentName": "Priyanshee Das",
+            "penNumber": "20380996692",
+            "section": "A"
+           },
+           {
+            "studentName": "M Lasya",
+            "penNumber": "20271858305",
+            "section": "A"
+           },
+           {
+            "studentName": "N. Rahul",
+            "penNumber": "20294178062",
+            "section": "A"
+           },
+           {
+            "studentName": "G. Pranavi",
+            "penNumber": "20412468347",
+            "section": "A"
+           },
+           {
+            "studentName": "R. Sathwik",
+            "penNumber": "20308761020",
+            "section": "A"
+           },
+           {
+            "studentName": "Dipanshi Sing",
+            "penNumber": "20678536166",
+            "section": "A"
+           },
+           {
+            "studentName": "P. Yashwanth",
+            "penNumber": "20294267562",
+            "section": "A"
+           },
+           {
+            "studentName": "B. Sri Latha",
+            "penNumber": "20243711920",
+            "section": "A"
+           },
+           {
+            "studentName": "Aryan Kumar",
+            "penNumber": "20579015079",
+            "section": "A"
+           },
+           {
+            "studentName": "R. Mahalakshmi",
+            "penNumber": "20505084164",
+            "section": "A"
+           },
+           {
+            "studentName": "K. Lakshmi Sindu",
+            "penNumber": "20308034852",
+            "section": "A"
+           },
+           {
+            "studentName": "R. Jyotheeswara Reddy",
+            "penNumber": "22670434309",
+            "section": "A"
+           },
+           {
+            "studentName": "G. Lakshmi Venkata \nRamana",
+            "penNumber": "20373996785",
+            "section": "A"
+           },
+           {
+            "studentName": "K. Dhivija",
+            "penNumber": "20487254112",
+            "section": "A"
+           },
+           {
+            "studentName": "M. Sunandha",
+            "penNumber": "20474223621",
+            "section": "A"
+           },
+           {
+            "studentName": "D. Vigna adhikya Sri",
+            "penNumber": "20294416214",
+            "section": "A"
+           }
+    ],
+    "Mantapampalli": [
+        {
+            "studentName": "CHITTIBOINA Venkata Ramu",
+            "penNumber": 20599229575,
+            "section": "A"
+           },
+           {
+            "studentName": "CHITTIBOINA VENKATA LAKKI",
+            "penNumber": 20353219008,
+            "section": "A"
+           },
+           {
+            "studentName": "UMMADI DIVYA",
+            "penNumber": 20437448106,
+            "section": "A"
+           },
+           {
+            "studentName": "DODDI AMMULU",
+            "penNumber": 20272746360,
+            "section": "A"
+           },
+           {
+            "studentName": "PONNU AJITHA REDDY",
+            "penNumber": 20224216179,
+            "section": "A"
+           },
+           {
+            "studentName": "YALLATURI ALISHA",
+            "penNumber": 20325133664,
+            "section": "A"
+           },
+           {
+            "studentName": "YELLATURI AZIZA",
+            "penNumber": 20229074424,
+            "section": "A"
+           },
+           {
+            "studentName": "GURIGINJAKUNTA AKSHARA",
+            "penNumber": 20288645604,
+            "section": "A"
+           },
+           {
+            "studentName": "TONDURU HANIFA",
+            "penNumber": 20685726789,
+            "section": "A"
+           },
+           {
+            "studentName": "KARAMALLA SAMEERA",
+            "penNumber": 20477219940,
+            "section": "A"
+           },
+           {
+            "studentName": "KALLURU UZMA RAFAT",
+            "penNumber": 20323035738,
+            "section": "A"
+           },
+           {
+            "studentName": "METTA VENKATA DEEKSHITHA REDDY",
+            "penNumber": 20359275850,
+            "section": "A"
+           },
+           {
+            "studentName": "KALIKI PRANITHA REDDY",
+            "penNumber": 20991524795,
+            "section": "A"
+           },
+           {
+            "studentName": "ORAMPADU VENNELA",
+            "penNumber": 20330537747,
+            "section": "A"
+           },
+           {
+            "studentName": "APPIREDDY NANDHINI",
+            "penNumber": 20449178778,
+            "section": "A"
+           },
+           {
+            "studentName": "SUNKESULA AAHIL",
+            "penNumber": 20582683977,
+            "section": "A"
+           },
+           {
+            "studentName": "KOTIKE AKSHY KUMAR",
+            "penNumber": 20659278858,
+            "section": "A"
+           },
+           {
+            "studentName": "NAGAM HEMANTH KUMAR REDDY",
+            "penNumber": 20269406346,
+            "section": "A"
+           },
+           {
+            "studentName": "KARAMALLA MOHAMMAD HAMID",
+            "penNumber": 20909436178,
+            "section": "A"
+           },
+           {
+            "studentName": "SUNKESULA MOHAMMAD UMAR",
+            "penNumber": 20251362233,
+            "section": "A"
+           },
+           {
+            "studentName": "TELLAGUTI MOHITH KUMAR",
+            "penNumber": 20589926548,
+            "section": "A"
+           },
+           {
+            "studentName": "YALLATURU MOULA",
+            "penNumber": 20663686794,
+            "section": "A"
+           },
+           {
+            "studentName": "KARAMALLA NASIR",
+            "penNumber": 20624492368,
+            "section": "A"
+           },
+           {
+            "studentName": "GEDDAM SUCHETAN REDDY",
+            "penNumber": 20380817020,
+            "section": "A"
+           },
+           {
+            "studentName": "POTTETI VENKATA VARSHITH REDDY",
+            "penNumber": 20376089562,
+            "section": "A"
+           },
+           {
+            "studentName": "YADANAPARTHI VENKATA VIGNESWARA REDDY",
+            "penNumber": 20346649750,
+            "section": "A"
+           },
+           {
+            "studentName": "BODDE VISHNUVARDHAN NAIDU",
+            "penNumber": 20840418713,
+            "section": "A"
+           },
+           {
+            "studentName": "CHAMA VISWAK REDDY",
+            "penNumber": 20355474168,
+            "section": "A"
+           },
+           {
+            "studentName": "KALLURU AISHA",
+            "penNumber": 20665133272,
+            "section": "A"
+           },
+           {
+            "studentName": "ELURU DHARMA TEJA",
+            "penNumber": 20380817020,
+            "section": "A"
+           },
+           {
+            "studentName": "GOPINENI PAVAN KUMAR",
+            "penNumber": 20437791309,
+            "section": "A"
+           },
+           {
+            "studentName": "KAMATHAM TEJ TARAN",
+            "penNumber": 20399169506,
+            "section": "A"
+           },
+           {
+            "studentName": "GORLA MOKSHITH NAIDU",
+            "penNumber": 20325857089,
+            "section": "A"
+           },
+           {
+            "studentName": "CHENI CHENNA KHESWA",
+            "penNumber": 20505472861,
+            "section": "A"
+           },
+           {
+            "studentName": "MASEPOGU JOSHNA",
+            "penNumber": 20629430675,
+            "section": "A"
+           }
+        
+    ],
+    "Ganesh Pahad": [
+        { "studentName": "   ", "penNumber": "  ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "     ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "    ", "section": "A" },
+        { "studentName": "  ", "penNumber": "      ", "section": "A" },
+        { "studentName": "  ", "penNumber": "      ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" }
+    ],
+    "Tandur": [
+        { "studentName": "   ", "penNumber": "  ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "     ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "    ", "section": "A" },
+        { "studentName": "  ", "penNumber": "      ", "section": "A" },
+        { "studentName": "  ", "penNumber": "      ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" },
+        { "studentName": "  ", "penNumber": "   ", "section": "A" }
+    ]
+}
