@@ -4,36 +4,46 @@ body {
     background-color: #f9f9f9;
 }
 
-header {
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-}
-
-header h1 {
-    margin-right: 20px;
-    font-size: 1.5em;
+h1 {
+    font-size: 2em;
     color: #333;
+    margin-bottom: 20px;
 }
 
-header select, header button {
-    margin-right: 10px;
-    padding: 5px 10px;
+select {
+    padding: 10px;
     font-size: 1em;
     border-radius: 5px;
     border: 1px solid #ccc;
     background-color: #fff;
     cursor: pointer;
+    margin-bottom: 20px;
     transition: background-color 0.3s ease;
 }
 
-header button:disabled {
+select:focus {
+    background-color: #f0f0f0;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1em;
+    color: #fff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+}
+
+button:disabled {
     background-color: #e0e0e0;
     cursor: not-allowed;
 }
 
-header select:focus, header button:hover:not(:disabled) {
-    background-color: #f0f0f0;
+button:hover:not(:disabled) {
+    background-color: #45a049;
 }
 
 table {
@@ -63,6 +73,7 @@ td input[type="number"] {
     border: 1px solid #ccc;
     border-radius: 3px;
     text-align: center;
+    font-size: 0.9em;
 }
 
 td input[type="number"]:focus {
@@ -70,14 +81,21 @@ td input[type="number"]:focus {
     outline: none;
 }
 
-footer {
+td {
+    background-color: #fdfdfd;
+}
+
+td:nth-child(odd) {
+    background-color: #f4f4f4;
+}
+
+tfoot {
     margin-top: 20px;
     text-align: right;
 }
 
-footer button {
+tfoot button {
     padding: 8px 15px;
-    margin-left: 10px;
     font-size: 1em;
     color: #fff;
     background-color: #4CAF50;
@@ -87,6 +105,11 @@ footer button {
     transition: background-color 0.3s ease;
 }
 
-footer button:hover {
+tfoot button:hover {
     background-color: #45a049;
+}
+
+tfoot button:disabled {
+    background-color: #e0e0e0;
+    cursor: not-allowed;
 }
