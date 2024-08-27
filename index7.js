@@ -26,11 +26,11 @@ const calculateGrade = total => {
     return 'A1';
 };
 
-const calculateSGPA = subTotal => (subTotal / 50 * 10).toFixed(2); // Assuming total max marks of 50
+const calculateSGPA = subTotal => (subTotal / 50 * 10).toFixed(1); // Assuming total max marks of 50
 
-const calculateGPA = grandTotal => (grandTotal / 300 * 10).toFixed(2); // Updated assuming total max marks of 300
+const calculateGPA = grandTotal => (grandTotal / 300 * 10).toFixed(1); // Updated assuming total max marks of 300
 
-const calculatePercentage = grandTotal => ((grandTotal / 300) * 100).toFixed(2); // Updated assuming total max marks of 300
+const calculatePercentage = grandTotal => ((grandTotal / 300) * 100).toFixed(1); // Updated assuming total max marks of 300
 
 // React component
 function StudentMarksEntry() {
