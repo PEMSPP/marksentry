@@ -17,20 +17,31 @@ const maxMarks = [20, 5, 5, 5, 5, 5, 5];
 // Calculate totals, grades, and SGPA
 const calculateTotal = marks => marks.slice(0, 7).reduce((a, b) => a + Number(b), 0);
 
-const calculateGrade = total => {
-    if (total <= 9) return 'D';
-    if (total <= 19) return 'C';
-    if (total <= 29) return 'B2';
-    if (total <= 39) return 'B1';
+const calculateSubGrade = total => {
+    if (total <= 10) return 'D';
+    if (total <= 20) return 'C';
+    if (total <= 30) return 'B2';
+    if (total <= 40) return 'B1';
     if (total <= 45) return 'A2';
     return 'A1';
 };
 
-const calculateSGPA = subTotal => (subTotal / 50 * 10).toFixed(2); // Assuming total max marks of 50
+const calculateTotalGrade = grandTotal => {
+    if (grandTotal <= 100) return 'D2';
+    if (grandTotal <= 125) return 'D1';
+    if (grandTotal <= 135) return 'C2';
+    if (grandTotal <= 150) return 'C1';
+    if (grandTotal <= 175) return 'B2';
+    if (grandTotal <= 200) return 'B1';
+    if (grandTotal <= 225) return 'A2';
+    return 'A1';
+};
 
-const calculateGPA = grandTotal => (grandTotal / 250 * 10).toFixed(2); // Updated assuming total max marks of 250
+const calculateSGPA = subTotal => (subTotal / 50 * 10).toFixed(1); // Assuming total max marks of 50
 
-const calculatePercentage = grandTotal => ((grandTotal / 250) * 100).toFixed(2); // Updated assuming total max marks of 250
+const calculateGPA = grandTotal => (grandTotal / 250 * 10).toFixed(1); // Updated assuming total max marks of 250
+
+const calculatePercentage = grandTotal => ((grandTotal / 250) * 100).toFixed(1); // Updated assuming total max marks of 250
 
 // React component
 function StudentMarksEntry() {
@@ -100,15 +111,15 @@ function StudentMarksEntry() {
         // Update the value in the corresponding field
         student[subject][subIndex] = value;
 
-        // Recalculate totals, grades, SGPA, etc.
+        // Recalculate totals, sub-grade, SGPA, etc.
         student[subject][7] = calculateTotal(student[subject]);
-        student[subject][8] = calculateGrade(student[subject][7]);
+        student[subject][8] = calculateSubGrade(student[subject][7]);
         student[subject][9] = calculateSGPA(student[subject][7]);
 
         student.grandTotal = ['telugu', 'hindi', 'english', 'mathematics', 'social'].reduce(
             (total, subject) => total + student[subject][7], 0
         );
-        student.totalGrade = calculateGrade(student.grandTotal);
+        student.totalGrade = calculateTotalGrade(student.grandTotal);
         student.gpa = calculateGPA(student.grandTotal);
         student.percentage = calculatePercentage(student.grandTotal);
 
@@ -119,20 +130,21 @@ function StudentMarksEntry() {
 
     const saveToDatabase = async () => {
         const schoolName = selectedSchool;
-
+    
         try {
             for (const student of students) {
-                const penNumber = student.penNumber; // Unique identifier for each student
-
+                const sno = student.sno; // Unique identifier for each student within a school
+                const studentDataPath = `https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA1MARKS/CLASS-4/${schoolName}/${sno}.json`;
+    
                 // Check if student data already exists to prevent duplicates
-                const response = await axios.get(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA1MARKS/Class-4/${schoolName}/${penNumber}.json`);
-
+                const response = await axios.get(studentDataPath);
+    
                 if (response.data) {
                     // Student data already exists, update the record
-                    await axios.put(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA1MARKS/Class-4/${schoolName}/${penNumber}.json`, student);
+                    await axios.put(studentDataPath, student);
                 } else {
                     // Student data does not exist, create a new record
-                    await axios.post(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA1MARKS/Class-4/${schoolName}.json`, { [penNumber]: student });
+                    await axios.post(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA1MARKS/CLASS-4/${schoolName}.json`, { [sno]: student });
                 }
             }
             alert('Data saved successfully');
@@ -140,6 +152,7 @@ function StudentMarksEntry() {
             console.error('Error saving data:', error);
         }
     };
+    
 
     const saveToExcel = () => {
         const XLSX = window.XLSX;
@@ -260,7 +273,9 @@ function StudentMarksEntry() {
                                         <React.Fragment key={subject}>
                                             {student[subject].map((value, subIndex) => (
                                                 <td key={subIndex}>
-                                                    {isEditable ? (
+                                                    {subIndex === 8 || subIndex === 7 || subIndex === 9 ? (
+                                                        value
+                                                    ) : isEditable ? (
                                                         <input
                                                             type="number"
                                                             value={value}
@@ -296,3 +311,4 @@ function StudentMarksEntry() {
 
 // Initialize React
 createRoot(document.getElementById('root')).render(<StudentMarksEntry />);
+
