@@ -37,9 +37,9 @@ const calculateTotalGrade = grandTotal => {
     return 'A1';
 };
 
-const calculateSGPA = subTotal => (subTotal / 50 * 10).toFixed(2); // Assuming total max marks of 50
+const calculateSGPA = subTotal => (subTotal / 50 * 10).toFixed(1); // Assuming total max marks of 50
 
-const calculateGPA = grandTotal => (grandTotal / 250 * 10).toFixed(2); // Updated assuming total max marks of 250
+const calculateGPA = grandTotal => (grandTotal / 250 * 10).toFixed(1); // Updated assuming total max marks of 250
 
 const calculatePercentage = grandTotal => ((grandTotal / 250) * 100).toFixed(1); // Updated assuming total max marks of 250
 
@@ -130,20 +130,21 @@ function StudentMarksEntry() {
 
     const saveToDatabase = async () => {
         const schoolName = selectedSchool;
-
+    
         try {
             for (const student of students) {
-                const penNumber = student.penNumber; // Unique identifier for each student
-
+                const sno = student.sno; // Unique identifier for each student within a school
+                const studentDataPath = `https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA1MARKS/CLASS-1/${schoolName}/${sno}.json`;
+    
                 // Check if student data already exists to prevent duplicates
-                const response = await axios.get(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA1MARKS/Class-1/${schoolName}/${penNumber}.json`);
-
+                const response = await axios.get(studentDataPath);
+    
                 if (response.data) {
                     // Student data already exists, update the record
-                    await axios.put(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA1MARKS/Class-1/${schoolName}/${penNumber}.json`, student);
+                    await axios.put(studentDataPath, student);
                 } else {
                     // Student data does not exist, create a new record
-                    await axios.post(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA1MARKS/Class-1/${schoolName}.json`, { [penNumber]: student });
+                    await axios.post(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA1MARKS/CLASS-1/${schoolName}.json`, { [sno]: student });
                 }
             }
             alert('Data saved successfully');
@@ -151,6 +152,7 @@ function StudentMarksEntry() {
             console.error('Error saving data:', error);
         }
     };
+    
 
     const saveToExcel = () => {
         const XLSX = window.XLSX;
@@ -309,3 +311,4 @@ function StudentMarksEntry() {
 
 // Initialize React
 createRoot(document.getElementById('root')).render(<StudentMarksEntry />);
+
