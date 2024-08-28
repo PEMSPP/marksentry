@@ -119,7 +119,7 @@ function StudentMarksEntry() {
         
                 try {
                     // Check if student data already exists to prevent duplicates
-                    const response = await axios.get(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/Class-4${schoolName}/${penNumber}.json`);
+                    const response = await axios.get(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA-1/Class-4${schoolName}/${penNumber}.json`);
         
                     if (response.data) {
                         // Student data already exists, update the record
