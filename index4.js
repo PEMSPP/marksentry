@@ -123,10 +123,10 @@ function StudentMarksEntry() {
         
                     if (response.data) {
                         // Student data already exists, update the record
-                        await axios.put(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/Class-4${schoolName}/${penNumber}.json`, student);
+                        await axios.put(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA-1/Class-4${schoolName}/${penNumber}.json`, student);
                     } else {
                         // Student data does not exist, create a new record
-                        await axios.post(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/Class-4${schoolName}.json`, { [penNumber]: student });
+                        await axios.post(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA-1/Class-4${schoolName}.json`, { [penNumber]: student });
                     }
                 } catch (error) {
                     console.error('Error saving data:', error);
