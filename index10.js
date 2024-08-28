@@ -209,7 +209,7 @@ function StudentMarksEntry() {
 
     return (
         <div>
-            <h1>Class 8 FA1 Marks Entry</h1>
+            <h1>Class 10 FA1 Marks Entry</h1>
             <label>
                 Select School:
                 <select value={selectedSchool} onChange={e => setSelectedSchool(e.target.value)}>
