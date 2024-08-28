@@ -130,10 +130,9 @@ function StudentMarksEntry() {
                         // Student data does not exist, create a new record
                         await axios.post(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA1MARKS/CLASS-7/${schoolName}.json`, { [sno]: student });
                     }
-                alert('Data saved successfully');
-            
-                
+               
             }
+             alert('Data saved successfully');
         }
     };
     const saveToExcel = () => {
