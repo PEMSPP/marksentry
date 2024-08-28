@@ -26,11 +26,11 @@ const calculateGrade = total => {
     return 'A1';
 };
 
-const calculateSGPA = subTotal => (subTotal / 50 * 10).toFixed(1); // Assuming total max marks of 50
+const calculateSGPA = subTotal => (subTotal / 50 * 10).toFixed(2); // Assuming total max marks of 50
 
-const calculateGPA = grandTotal => (grandTotal / 300 * 10).toFixed(1); // Updated assuming total max marks of 300
+const calculateGPA = grandTotal => (grandTotal / 300 * 10).toFixed(2); // Updated assuming total max marks of 300
 
-const calculatePercentage = grandTotal => ((grandTotal / 300) * 100).toFixed(1); // Updated assuming total max marks of 300
+const calculatePercentage = grandTotal => ((grandTotal / 300) * 100).toFixed(2); // Updated assuming total max marks of 300
 
 // React component
 function StudentMarksEntry() {
@@ -111,26 +111,29 @@ function StudentMarksEntry() {
 
     const saveToDatabase = async () => {
         const schoolName = selectedSchool;
-    
-        try {
-            for (const student of students) {
-                const sno = student.sno; // Unique identifier for each student within a school
-                const studentDataPath = `https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA1MARKS/CLASS-7/${schoolName}/${sno}.json`;
-    
-                // Check if student data already exists to prevent duplicates
-                const response = await axios.get(studentDataPath);
-    
-                if (response.data) {
-                    // Student data already exists, update the record
-                    await axios.put(studentDataPath, student);
-                } else {
-                    // Student data does not exist, create a new record
-                    await axios.post(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA1MARKS/CLASS-7/${schoolName}.json`, { [sno]: student });
+        const confirmation = window.confirm("Data is saving to the database. Click OK to proceed.");
+
+        if (confirmation) {
+            try {
+                for (const student of students) {
+                    const sno = student.sno; // Unique identifier for each student within a school
+                    const studentDataPath = `https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA1MARKS/CLASS-7/${schoolName}/${sno}.json`;
+
+                    // Check if student data already exists to prevent duplicates
+                    const response = await axios.get(studentDataPath);
+
+                    if (response.data) {
+                        // Student data already exists, update the record
+                        await axios.put(studentDataPath, student);
+                    } else {
+                        // Student data does not exist, create a new record
+                        await axios.post(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA1MARKS/CLASS-7/${schoolName}.json`, { [sno]: student });
+                    }
                 }
+                alert('Data saved successfully');
+            } catch (error) {
+                console.error('Error saving data:', error);
             }
-            alert('Data saved successfully');
-        } catch (error) {
-            console.error('Error saving data:', error);
         }
     };
 
@@ -191,108 +194,129 @@ function StudentMarksEntry() {
 
         ws['!cols'] = [
             { wpx: 50 }, { wpx: 100 }, { wpx: 80 }, { wpx: 50 }, // Fixed columns
-            { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, // Telugu
-            { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, // Hindi
-            { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, // English
-            { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, // Mathematics
-            { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, // Science
-            { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, // Social
-            { wpx: 100 }, { wpx: 100 }, { wpx: 100 }, { wpx: 100 } // Final columns
+            { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, // Telugu
+            { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, // Hindi
+            { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, // English
+            { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, // Mathematics
+            { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, // Science
+            { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, // Social
+            { wpx: 50 }, { wpx: 50 }, { wpx: 50 }, { wpx: 50 }  // Grand Total, Grade, GPA, Percentage
         ];
 
-        XLSX.utils.book_append_sheet(wb, ws, 'Class-6');
-        XLSX.writeFile(wb, 'class_6_data.xlsx');
+        XLSX.utils.book_append_sheet(wb, ws, "Student Marks");
+        XLSX.writeFile(wb, "Student_Marks.xlsx");
     };
 
     return (
         <div>
-            <h2>Class 6 Marks Entry</h2>
-
-            <div>
-                <label>Select School: </label>
-                <select value={selectedSchool} onChange={e => setSelectedSchool(e.target.value)}>
-                    <option value="" disabled>Select a school</option>
-                    {schools.map((school, index) => (
-                        <option key={index} value={school.name}>{school.name}</option>
-                    ))}
-                </select>
-            </div>
-
-            {selectedSchool && (
-                <div>
-                    <table border="1" style={{ borderCollapse: 'collapse', width: '100%' }}>
-                        <thead>
-                            <tr>
-                                <th rowSpan="2">Sno</th>
-                                <th rowSpan="2">Student Name</th>
-                                <th rowSpan="2">Pen Number</th>
-                                <th rowSpan="2">Section</th>
-                                <th colSpan="8">Telugu</th>
-                                <th colSpan="8">Hindi</th>
-                                <th colSpan="8">English</th>
-                                <th colSpan="8">Mathematics</th>
-                                <th colSpan="8">Science</th>
-                                <th colSpan="8">Social</th>
-                                <th rowSpan="2">Grand Total</th>
-                                <th rowSpan="2">Total Grade</th>
-                                <th rowSpan="2">GPA</th>
-                                <th rowSpan="2">Percentage</th>
+            <label htmlFor="school-select">Select a School: </label>
+            <select id="school-select" onChange={e => setSelectedSchool(e.target.value)} value={selectedSchool}>
+                <option value="">--Select--</option>
+                {schools.map(school => (
+                    <option key={school.name} value={school.name}>{school.name}</option>
+                ))}
+            </select>
+            <button onClick={saveToDatabase} disabled={!selectedSchool}>Save to Database</button>
+            <button onClick={saveToExcel} disabled={!selectedSchool}>Save to Excel</button>
+            {students.length > 0 && (
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th rowSpan="2">Sno</th>
+                            <th rowSpan="2">Student Name</th>
+                            <th rowSpan="2">Pen Number</th>
+                            <th rowSpan="2">Section</th>
+                            <th colSpan="8">Telugu</th>
+                            <th colSpan="8">Hindi</th>
+                            <th colSpan="8">English</th>
+                            <th colSpan="8">Mathematics</th>
+                            <th colSpan="8">Science</th>
+                            <th colSpan="8">Social</th>
+                            <th rowSpan="2">Grand Total</th>
+                            <th rowSpan="2">Total Grade</th>
+                            <th rowSpan="2">GPA</th>
+                            <th rowSpan="2">Percentage</th>
+                        </tr>
+                        <tr>
+                            <th>FA1-20M</th>
+                            <th>Children's Participation</th>
+                            <th>Written Work</th>
+                            <th>Speaking</th>
+                            <th>Behaviour</th>
+                            <th>SubTotal</th>
+                            <th>Grade</th>
+                            <th>SGPA</th>
+                            <th>FA1-20M</th>
+                            <th>Children's Participation</th>
+                            <th>Written Work</th>
+                            <th>Speaking</th>
+                            <th>Behaviour</th>
+                            <th>SubTotal</th>
+                            <th>Grade</th>
+                            <th>SGPA</th>
+                            <th>FA1-20M</th>
+                            <th>Children's Participation</th>
+                            <th>Written Work</th>
+                            <th>Speaking</th>
+                            <th>Behaviour</th>
+                            <th>SubTotal</th>
+                            <th>Grade</th>
+                            <th>SGPA</th>
+                            <th>FA1-20M</th>
+                            <th>Children's Participation</th>
+                            <th>Written Work</th>
+                            <th>Speaking</th>
+                            <th>Behaviour</th>
+                            <th>SubTotal</th>
+                            <th>Grade</th>
+                            <th>SGPA</th>
+                            <th>FA1-20M</th>
+                            <th>Children's Participation</th>
+                            <th>Written Work</th>
+                            <th>Speaking</th>
+                            <th>Behaviour</th>
+                            <th>SubTotal</th>
+                            <th>Grade</th>
+                            <th>SGPA</th>
+                            <th>FA1-20M</th>
+                            <th>Children's Participation</th>
+                            <th>Written Work</th>
+                            <th>Speaking</th>
+                            <th>Behaviour</th>
+                            <th>SubTotal</th>
+                            <th>Grade</th>
+                            <th>SGPA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {students.map((student, index) => (
+                            <tr key={index}>
+                                <td>{student.sno}</td>
+                                <td>{student.studentName}</td>
+                                <td>{student.penNumber}</td>
+                                <td>{student.section}</td>
+                                {['telugu', 'hindi', 'english', 'mathematics', 'science', 'social'].map(subject =>
+                                    student[subject].slice(0, 5).map((mark, subIndex) => (
+                                        <td key={`${subject}-${subIndex}`}>
+                                            <input
+                                                type="number"
+                                                value={mark}
+                                                onChange={e => handleInputChange(index, subject, subIndex, e.target.value)}
+                                            />
+                                        </td>
+                                    ))
+                                )}
+                                <td>{student.grandTotal}</td>
+                                <td>{student.totalGrade}</td>
+                                <td>{student.gpa}</td>
+                                <td>{student.percentage}</td>
                             </tr>
-                            <tr>
-                                {Array(6).fill().map((_, i) => (
-                                    <React.Fragment key={i}>
-                                        <th>FA1-20M</th>
-                                        <th>Children's Participation</th>
-                                        <th>Written Work</th>
-                                        <th>Speaking</th>
-                                        <th>Behaviour</th>
-                                        <th>SubTotal</th>
-                                        <th>Grade</th>
-                                        <th>SGPA</th>
-                                    </React.Fragment>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {students.map((student, index) => (
-                                <tr key={index}>
-                                    <td>{student.sno}</td>
-                                    <td>{student.studentName}</td>
-                                    <td>{student.penNumber}</td>
-                                    <td>{student.section}</td>
-                                    {['telugu', 'hindi', 'english', 'mathematics', 'science', 'social'].map(subject => (
-                                        student[subject].slice(0, 8).map((value, subIndex) => (
-                                            <td key={`${subject}-${subIndex}`}>
-                                                {subIndex < 5 ? (
-                                                    <input
-                                                        type="number"
-                                                        value={value}
-                                                        onChange={e => handleInputChange(index, subject, subIndex, e.target.value)}
-                                                        max={maxMarks[subIndex]}
-                                                    />
-                                                ) : (
-                                                    value
-                                                )}
-                                            </td>
-                                        ))
-                                    ))}
-                                    <td>{student.grandTotal}</td>
-                                    <td>{student.totalGrade}</td>
-                                    <td>{student.gpa}</td>
-                                    <td>{student.percentage}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                    <div>
-                        <button onClick={saveToExcel}>Save to Excel</button>
-                        <button onClick={saveToDatabase}>Save to Database</button>
-                    </div>
-                </div>
+                        ))}
+                    </tbody>
+                </table>
             )}
         </div>
     );
 }
 
-// Mount the React component to the DOM
 createRoot(document.getElementById('root')).render(<StudentMarksEntry />);
