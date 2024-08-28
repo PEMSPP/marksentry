@@ -110,10 +110,32 @@ function StudentMarksEntry() {
         setStudents(newStudents);
     };
 
-    const saveDataToDatabase = () => {
-        axios.post('https://marksentry-bcdd1-default-rtdb.firebaseio.com/Class-9.json', students)
-            .catch(error => console.error('Error saving data:', error));
+    const saveDataToDatabase = async () => {
+        const schoolName = selectedSchool; // Save under the selected school name
+
+        if (window.confirm("Data is saving to database. Do you want to continue?")) {
+            for (const student of students) {
+                const penNumber = student.penNumber; // Unique identifier for each student
+        
+                try {
+                    // Check if student data already exists to prevent duplicates
+                    const response = await axios.get(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/Class-9${schoolName}/${penNumber}.json`);
+        
+                    if (response.data) {
+                        // Student data already exists, update the record
+                        await axios.put(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/Class-9${schoolName}/${penNumber}.json`, student);
+                    } else {
+                        // Student data does not exist, create a new record
+                        await axios.post(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/Class-9${schoolName}.json`, { [penNumber]: student });
+                    }
+                } catch (error) {
+                    console.error('Error saving data:', error);
+                }
+            }
+            alert("Data saved successfully to the database.");
+        }
     };
+
 
     const saveToExcel = () => {
         const XLSX = window.XLSX;
@@ -172,112 +194,94 @@ function StudentMarksEntry() {
             { s: { r: 0, c: 36 }, e: { r: 0, c: 43 } }, // PScience
             { s: { r: 0, c: 44 }, e: { r: 0, c: 51 } }, // NScience
             { s: { r: 0, c: 52 }, e: { r: 0, c: 59 } }, // Social
-
         ];
     
-        if (!ws['!merges']) ws['!merges'] = [];
-        ws['!merges'].push(...mergeRanges);
+        ws['!merges'] = mergeRanges;
     
-        // Adjust column width for better readability (optional)
-        ws['!cols'] = [
-            { wpx: 50 }, { wpx: 100 }, { wpx: 80 }, { wpx: 50 }, // Fixed columns
-            { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, // Telugu
-            { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, // Hindi
-            { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, // English
-            { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, // Mathematics
-            { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, // PScience
-            { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, // NScience
-            { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, // Social
-            { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 } // Grand Total, Total Grade, GPA, Percentage
+        // Adjust column widths
+        const wscols = [
+            { wch: 5 }, { wch: 20 }, { wch: 15 }, { wch: 10 },
+            ...Array(56).fill({ wch: 12 }),
+            { wch: 12 }, { wch: 10 }, { wch: 10 }, { wch: 15 }
         ];
+        ws['!cols'] = wscols;
     
-        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-    
-        // Export the file
-        XLSX.writeFile(wb, "Marks_Data.xlsx");
+        XLSX.utils.book_append_sheet(wb, ws, `${selectedSchool}_Marks`);
+        XLSX.writeFile(wb, `${selectedSchool}_Marks.xlsx`);
     };
+    
 
     return (
         <div>
-            <h1>Student Marks Entry</h1>
+            <h1>Class 8 FA1 Marks Entry</h1>
             <label>
                 Select School:
                 <select value={selectedSchool} onChange={e => setSelectedSchool(e.target.value)}>
-                    <option value="">Select School</option>
-                    {schools.map(school => (
-                        <option key={school.name} value={school.name}>
-                            {school.name}
-                        </option>
+                    <option value="">-- Select School --</option>
+                    {schools.map((school, index) => (
+                        <option key={index} value={school.name}>{school.name}</option>
                     ))}
                 </select>
             </label>
 
             {students.length > 0 && (
-                <table>
-                    <thead>
-                        <tr>
-                            <th>SNo</th>
-                            <th>Student Name</th>
-                            <th>Pen Number</th>
-                            <th>Section</th>
-                            <th colSpan="8">Telugu</th>
-                            <th colSpan="8">Hindi</th>
-                            <th colSpan="8">English</th>
-                            <th colSpan="8">Mathematics</th>
-                            <th colSpan="8">PScience</th>
-                            <th colSpan="8">NScience</th>
-                            <th colSpan="8">Social</th>
-                            <th>Grand Total</th>
-                            <th>Total Grade</th>
-                            <th>GPA</th>
-                            <th>Percentage</th>
-                        </tr>
-                        <tr>
-                            <th></th><th></th><th></th><th></th>
-                            <th>FA1-20M</th><th>Children's Participation</th><th>Written Work</th><th>Speaking</th><th>Behaviour</th><th>SubTotal</th><th>Grade</th><th>SGPA</th>
-                            <th>FA1-20M</th><th>Children's Participation</th><th>Written Work</th><th>Speaking</th><th>Behaviour</th><th>SubTotal</th><th>Grade</th><th>SGPA</th>
-                            <th>FA1-20M</th><th>Children's Participation</th><th>Written Work</th><th>Speaking</th><th>Behaviour</th><th>SubTotal</th><th>Grade</th><th>SGPA</th>
-                            <th>FA1-20M</th><th>Children's Participation</th><th>Written Work</th><th>Speaking</th><th>Behaviour</th><th>SubTotal</th><th>Grade</th><th>SGPA</th>
-                            <th>FA1-20M</th><th>Children's Participation</th><th>Written Work</th><th>Speaking</th><th>Behaviour</th><th>SubTotal</th><th>Grade</th><th>SGPA</th>
-                            <th>FA1-20M</th><th>Children's Participation</th><th>Written Work</th><th>Speaking</th><th>Behaviour</th><th>SubTotal</th><th>Grade</th><th>SGPA</th>
-                            <th>FA1-20M</th><th>Children's Participation</th><th>Written Work</th><th>Speaking</th><th>Behaviour</th><th>SubTotal</th><th>Grade</th><th>SGPA</th>
-                            <th></th><th></th><th></th><th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {students.map((student, index) => (
-                            <tr key={student.penNumber}>
-                                <td>{student.sno}</td>
-                                <td>{student.studentName}</td>
-                                <td>{student.penNumber}</td>
-                                <td>{student.section}</td>
-                                {['telugu', 'hindi', 'english', 'mathematics', 'pscience', 'nscience', 'social'].map(subject =>
-                                    student[subject].map((value, subIndex) => (
-                                        <td key={`${subject}-${subIndex}`}>
-                                            {subIndex < 5 ? (
-                                                <input
-                                                    type="number"
-                                                    value={value}
-                                                    onChange={e => handleInputChange(index, subject, subIndex, e.target.value)}
-                                                />
-                                            ) : value}
-                                        </td>
-                                    ))
-                                )}
-                                <td>{student.grandTotal}</td>
-                                <td>{student.totalGrade}</td>
-                                <td>{student.gpa}</td>
-                                <td>{student.percentage}</td>
+                <div>
+                    <button onClick={saveToExcel}>Save to Excel</button>
+                    <button onClick={saveDataToDatabase}>Save to Database</button>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th rowSpan="2">SNo</th>
+                                <th rowSpan="2">Student Name</th>
+                                <th rowSpan="2">Pen Number</th>
+                                <th rowSpan="2">Section</th>
+                                {['Telugu', 'Hindi', 'English', 'Mathematics', 'PScience', 'NScience', 'Social'].map(subject => (
+                                    <th key={subject} colSpan="8">{subject}</th>
+                                ))}
+                                <th rowSpan="2">Grand Total</th>
+                                <th rowSpan="2">Total Grade</th>
+                                <th rowSpan="2">GPA</th>
+                                <th rowSpan="2">Percentage</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                            <tr>
+                                {Array(7).fill(['FA1-20M', 'Children\'s Participation', 'Written Work', 'Speaking', 'Behaviour', 'SubTotal', 'Grade', 'SGPA']).flat().map((sub, index) => (
+                                    <th key={index}>{sub}</th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {students.map((student, index) => (
+                                <tr key={index}>
+                                    <td>{student.sno}</td>
+                                    <td>{student.studentName}</td>
+                                    <td>{student.penNumber}</td>
+                                    <td>{student.section}</td>
+                                    {['telugu', 'hindi', 'english', 'mathematics', 'pscience', 'nscience', 'social'].map((subject, subIndex) => (
+                                        student[subject].slice(0, 8).map((mark, i) => (
+                                            <td key={i}>
+                                                {i < 5 ? (
+                                                    <input
+                                                        type="number"
+                                                        value={mark}
+                                                        onChange={e => handleInputChange(index, subject, i, e.target.value)}
+                                                    />
+                                                ) : mark}
+                                            </td>
+                                        ))
+                                    ))}
+                                    <td>{student.grandTotal}</td>
+                                    <td>{student.totalGrade}</td>
+                                    <td>{student.gpa}</td>
+                                    <td>{student.percentage}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             )}
-
-            <button onClick={saveDataToDatabase}>Save to Database</button>
-            <button onClick={saveToExcel}>Save to Excel</button>
         </div>
     );
 }
 
+// Render the component
 createRoot(document.getElementById('root')).render(<StudentMarksEntry />);
