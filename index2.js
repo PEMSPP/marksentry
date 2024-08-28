@@ -109,27 +109,23 @@ function StudentMarksEntry() {
         // Update state with the new students array
         setStudents(newStudents);
     };
-
-    const saveDataToDatabase = async () => {
+ const saveDataToDatabase = async () => {
         const schoolName = selectedSchool; // Save under the selected school name
 
         if (window.confirm("Data is saving to database. Do you want to continue?")) {
             for (const student of students) {
-                const penNumber = student.penNumber; // Unique identifier for each student
-        
-                try {
-                    // Check if student data already exists to prevent duplicates
-                    const response = await axios.get(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA-1/Class-2${schoolName}/${penNumber}.json`);
-        
-                    if (response.data) {
-                        // Student data already exists, update the record
-                        await axios.put(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA-1/Class-2${schoolName}/${penNumber}.json`, student);
-                    } else {
-                        // Student data does not exist, create a new record
-                        await axios.post(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA-1/Class-2${schoolName}.json`, { [penNumber]: student });
-                    }
-                } catch (error) {
-                    console.error('Error saving data:', error);
+                const sno = student.sno; // Unique identifier for each student within a school
+                const studentDataPath = `https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA1MARKS/CLASS-2/${schoolName}/${sno}.json`;
+    
+                // Check if student data already exists to prevent duplicates
+                const response = await axios.get(studentDataPath);
+    
+                if (response.data) {
+                    // Student data already exists, update the record
+                    await axios.put(studentDataPath, student);
+                } else {
+                    // Student data does not exist, create a new record
+                    await axios.post(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA1MARKS/CLASS-2/${schoolName}.json`, { [sno]: student });
                 }
             }
             alert("Data saved successfully to the database.");
