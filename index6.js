@@ -117,7 +117,7 @@ function StudentMarksEntry() {
             try {
                 for (const student of students) {
                     const sno = student.sno; // Unique identifier for each student within a school
-                    const studentDataPath = `https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA1MARKS/CLASS-6/${schoolName}/${sno}.json`;
+                    const studentDataPath = `https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA-1/CLASS-6/${schoolName}/${sno}.json`;
 
                     // Check if student data already exists to prevent duplicates
                     const response = await axios.get(studentDataPath);
@@ -127,7 +127,7 @@ function StudentMarksEntry() {
                         await axios.put(studentDataPath, student);
                     } else {
                         // Student data does not exist, create a new record
-                        await axios.post(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA1MARKS/CLASS-6/${schoolName}.json`, { [sno]: student });
+                        await axios.post(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA-1/CLASS-6/${schoolName}.json`, { [sno]: student });
                     }
                 }
                 alert('Data saved successfully');
