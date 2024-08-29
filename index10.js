@@ -109,28 +109,29 @@ function StudentMarksEntry() {
         // Update state
         setStudents(newStudents);
     };
-      const saveDataToDatabase = async () => {
-        const schoolName = selectedSchool; // Save under the selected school name
 
-        if (window.confirm("Data is saving to database. Do you want to continue?")) {
-            for (const student of students) {
-                const sno = student.sno; // Unique identifier for each student within a school
-                const studentDataPath = `https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA1MARKS/CLASS-10/${schoolName}/${sno}.json`;
     
-                // Check if student data already exists to prevent duplicates
-                const response = await axios.get(studentDataPath);
-    
-                if (response.data) {
-                    // Student data already exists, update the record
-                    await axios.put(studentDataPath, student);
-                } else {
-                    // Student data does not exist, create a new record
-                    await axios.post(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA1MARKS/CLASS-10/${schoolName}.json`, { [sno]: student });
-                }
-            }
-            alert("Data saved successfully to the database.");
+    const saveToDatabase = async () => {
+        if (!selectedSchool) {
+            alert('Please select a school first.');
+            return;
         }
+        alert('Data is saving to the database...');
+    
+        axios
+            .post(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA1-MARKS/Class-10/${selectedSchool}.json`, students)
+            .then(() => {
+                // Notify the user that data is saved successfully
+                alert('Data saved successfully!');
+            })
+            .catch((error) => {
+                console.error('Error saving data:', error);
+                alert('Error saving data. Please try again.');
+            });
+
     };
+    
+
 
 
     const saveToExcel = () => {
@@ -223,7 +224,7 @@ function StudentMarksEntry() {
             {students.length > 0 && (
                 <div>
                     <button onClick={saveToExcel}>Save to Excel</button>
-                    <button onClick={saveDataToDatabase}>Save to Database</button>
+                    <button onClick={saveToDatabase}>Save to Database</button>
                     <table>
                         <thead>
                             <tr>
