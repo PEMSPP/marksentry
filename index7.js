@@ -28,9 +28,9 @@ const calculateGrade = total => {
 
 const calculateSGPA = subTotal => (subTotal / 50 * 10).toFixed(1); // Assuming total max marks of 50
 
-const calculateGPA = grandTotal => (grandTotal / 350 * 10).toFixed(1); // Updated assuming total max marks of 350
+const calculateGPA = grandTotal => (grandTotal / 300 * 10).toFixed(1); // Updated assuming total max marks of 350
 
-const calculatePercentage = grandTotal => ((grandTotal / 350) * 100).toFixed(1); // Updated assuming total max marks of 350
+const calculatePercentage = grandTotal => ((grandTotal / 300) * 100).toFixed(1); // Updated assuming total max marks of 350
 
 // React component
 function StudentMarksEntry() {
@@ -228,7 +228,7 @@ function StudentMarksEntry() {
                                 <th rowSpan="2">Student Name</th>
                                 <th rowSpan="2">Pen Number</th>
                                 <th rowSpan="2">Section</th>
-                                {['Telugu', 'Hindi', 'English', 'Mathematics', 'PScience', 'Social'].map(subject => (
+                                {['Telugu', 'Hindi', 'English', 'Mathematics', 'Science', 'Social'].map(subject => (
                                     <th key={subject} colSpan="8">{subject}</th>
                                 ))}
                                 <th rowSpan="2">Grand Total</th>
