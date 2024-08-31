@@ -19,35 +19,6 @@
             
             <button type="submit">Login</button>
         </form>
-        <a href="#" id="forgot-password-link">Forgot Password?</a>
-    </div>
-
-    <!-- Password Reset Form -->
-    <div id="reset-form" style="display: none;">
-        <h2>Reset Password</h2>
-        <form id="reset">
-            <label for="reset-email">Enter your Email ID:</label><br>
-            <input type="email" id="reset-email" name="reset-email" required><br><br>
-            
-            <button type="submit">Send Confirmation Email</button>
-        </form>
-        <p id="email-sent-message" style="color: green; display: none;"></p>
-        <a href="#" id="back-to-login">Back to Login</a>
-    </div>
-
-    <!-- New Password Form -->
-    <div id="new-password-form" style="display: none;">
-        <h2>Create New Password</h2>
-        <form id="new-password">
-            <label for="new-password-input">New Password:</label><br>
-            <input type="password" id="new-password-input" name="new-password" required><br><br>
-            
-            <label for="confirm-password-input">Confirm New Password:</label><br>
-            <input type="password" id="confirm-password-input" name="confirm-password" required><br><br>
-            
-            <button type="submit">Change Password</button>
-        </form>
-        <p id="password-change-result" style="color: green;"></p>
     </div>
 
     <!-- Hidden Marks Entry Button -->
@@ -110,8 +81,6 @@
             "user50@example.com": "password50"
         };
 
-        let resetEmail;
-
         document.getElementById('login').addEventListener('submit', function(event) {
             event.preventDefault();
             
@@ -125,61 +94,8 @@
                 alert('Incorrect email or password. Please try again.');
             }
         });
-
-        document.getElementById('forgot-password-link').addEventListener('click', function() {
-            document.getElementById('login-form').style.display = 'none';
-            document.getElementById('reset-form').style.display = 'block';
-        });
-
-        document.getElementById('reset').addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            resetEmail = document.getElementById('reset-email').value;
-
-            if (resetEmail in validCredentials) {
-                // Simulate sending a confirmation email
-                document.getElementById('email-sent-message').innerText = 
-                    'A confirmation email has been sent to ' + resetEmail + '. Please check your inbox to reset your password.';
-                document.getElementById('email-sent-message').style.display = 'block';
-
-                // Simulate email confirmation link click (this would normally happen when the user clicks the link in the email)
-                setTimeout(function() {
-                    // Simulating the email confirmation by redirecting to the password reset form
-                    window.location.href = "#/reset-password"; // This represents the link the user would click in the email
-                    simulateEmailConfirmation(); // Function to handle the redirection
-                }, 3000); // Simulate a delay for the email
-            } else {
-                alert('Email not found. Please try again.');
-            }
-        });
-
-        function simulateEmailConfirmation() {
-            alert('Simulating email confirmation link click. You are now being redirected to reset your password.');
-            document.getElementById('reset-form').style.display = 'none';
-            document.getElementById('new-password-form').style.display = 'block';
-        }
-
-        document.getElementById('new-password').addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            var newPassword = document.getElementById('new-password-input').value;
-            var confirmPassword = document.getElementById('confirm-password-input').value;
-
-            if (newPassword === confirmPassword) {
-                validCredentials[resetEmail] = newPassword;
-                document.getElementById('password-change-result').innerText = 
-                    'Your password has been successfully changed. Please login with the new password.';
-                document.getElementById('new-password-form').style.display = 'none';
-                document.getElementById('login-form').style.display = 'block';
-            } else {
-                alert('Passwords do not match. Please try again.');
-            }
-        });
-
-        document.getElementById('back-to-login').addEventListener('click', function() {
-            document.getElementById('reset-form').style.display = 'none';
-            document.getElementById('login-form').style.display = 'block';
-        });
     </script>
 </body>
 </html>
+
+
