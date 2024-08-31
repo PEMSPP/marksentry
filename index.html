@@ -1,14 +1,186 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title> Marks Entry </title>
-	<link rel="stylesheet" href="style.css">
+    <title>Marks Entry</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-	<h1>Marks Entry </h1>
-	<a href="year.html" class="button">ENTERING MARKS</a>
+    <h1>Marks Entry</h1>
 
-	<script src="index.js"></script>
+    <!-- Login Form -->
+    <div id="login-form">
+        <h2>Login</h2>
+        <form id="login">
+            <label for="email">Email ID:</label><br>
+            <input type="email" id="email" name="email" required><br><br>
+            
+            <label for="password">Password:</label><br>
+            <input type="password" id="password" name="password" required><br><br>
+            
+            <button type="submit">Login</button>
+        </form>
+        <a href="#" id="forgot-password-link">Forgot Password?</a>
+    </div>
+
+    <!-- Password Reset Form -->
+    <div id="reset-form" style="display: none;">
+        <h2>Reset Password</h2>
+        <form id="reset">
+            <label for="reset-email">Enter your Email ID:</label><br>
+            <input type="email" id="reset-email" name="reset-email" required><br><br>
+            
+            <button type="submit">Send Confirmation Email</button>
+        </form>
+        <p id="email-sent-message" style="color: green; display: none;"></p>
+        <a href="#" id="back-to-login">Back to Login</a>
+    </div>
+
+    <!-- New Password Form -->
+    <div id="new-password-form" style="display: none;">
+        <h2>Create New Password</h2>
+        <form id="new-password">
+            <label for="new-password-input">New Password:</label><br>
+            <input type="password" id="new-password-input" name="new-password" required><br><br>
+            
+            <label for="confirm-password-input">Confirm New Password:</label><br>
+            <input type="password" id="confirm-password-input" name="confirm-password" required><br><br>
+            
+            <button type="submit">Change Password</button>
+        </form>
+        <p id="password-change-result" style="color: green;"></p>
+    </div>
+
+    <!-- Hidden Marks Entry Button -->
+    <div id="marks-entry" style="display: none;">
+        <a href="year.html" class="button">ENTERING MARKS</a>
+    </div>
+
+    <script>
+        const validCredentials = {
+            "rekhakondala02@gmail.com": "1066",
+            "user1@example.com": "password1",
+            "user2@example.com": "password2",
+            "user3@example.com": "password3",
+            "user4@example.com": "password4",
+            "user5@example.com": "password5",
+            "user6@example.com": "password6",
+            "user7@example.com": "password7",
+            "user8@example.com": "password8",
+            "user9@example.com": "password9",
+            "user10@example.com": "password10",
+            "user11@example.com": "password11",
+            "user12@example.com": "password12",
+            "user13@example.com": "password13",
+            "user14@example.com": "password14",
+            "user15@example.com": "password15",
+            "user16@example.com": "password16",
+            "user17@example.com": "password17",
+            "user18@example.com": "password18",
+            "user19@example.com": "password19",
+            "user20@example.com": "password20",
+            "user21@example.com": "password21",
+            "user22@example.com": "password22",
+            "user23@example.com": "password23",
+            "user24@example.com": "password24",
+            "user25@example.com": "password25",
+            "user26@example.com": "password26",
+            "user27@example.com": "password27",
+            "user28@example.com": "password28",
+            "user29@example.com": "password29",
+            "user30@example.com": "password30",
+            "user31@example.com": "password31",
+            "user32@example.com": "password32",
+            "user33@example.com": "password33",
+            "user34@example.com": "password34",
+            "user35@example.com": "password35",
+            "user36@example.com": "password36",
+            "user37@example.com": "password37",
+            "user38@example.com": "password38",
+            "user39@example.com": "password39",
+            "user40@example.com": "password40",
+            "user41@example.com": "password41",
+            "user42@example.com": "password42",
+            "user43@example.com": "password43",
+            "user44@example.com": "password44",
+            "user45@example.com": "password45",
+            "user46@example.com": "password46",
+            "user47@example.com": "password47",
+            "user48@example.com": "password48",
+            "user49@example.com": "password49",
+            "user50@example.com": "password50"
+        };
+
+        let resetEmail;
+
+        document.getElementById('login').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+
+            if (validCredentials[email] === password) {
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('marks-entry').style.display = 'block';
+            } else {
+                alert('Incorrect email or password. Please try again.');
+            }
+        });
+
+        document.getElementById('forgot-password-link').addEventListener('click', function() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('reset-form').style.display = 'block';
+        });
+
+        document.getElementById('reset').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            resetEmail = document.getElementById('reset-email').value;
+
+            if (resetEmail in validCredentials) {
+                // Simulate sending a confirmation email
+                document.getElementById('email-sent-message').innerText = 
+                    'A confirmation email has been sent to ' + resetEmail + '. Please check your inbox to reset your password.';
+                document.getElementById('email-sent-message').style.display = 'block';
+
+                // Simulate email confirmation link click (this would normally happen when the user clicks the link in the email)
+                setTimeout(function() {
+                    // Simulating the email confirmation by redirecting to the password reset form
+                    window.location.href = "#/reset-password"; // This represents the link the user would click in the email
+                    simulateEmailConfirmation(); // Function to handle the redirection
+                }, 3000); // Simulate a delay for the email
+            } else {
+                alert('Email not found. Please try again.');
+            }
+        });
+
+        function simulateEmailConfirmation() {
+            alert('Simulating email confirmation link click. You are now being redirected to reset your password.');
+            document.getElementById('reset-form').style.display = 'none';
+            document.getElementById('new-password-form').style.display = 'block';
+        }
+
+        document.getElementById('new-password').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            var newPassword = document.getElementById('new-password-input').value;
+            var confirmPassword = document.getElementById('confirm-password-input').value;
+
+            if (newPassword === confirmPassword) {
+                validCredentials[resetEmail] = newPassword;
+                document.getElementById('password-change-result').innerText = 
+                    'Your password has been successfully changed. Please login with the new password.';
+                document.getElementById('new-password-form').style.display = 'none';
+                document.getElementById('login-form').style.display = 'block';
+            } else {
+                alert('Passwords do not match. Please try again.');
+            }
+        });
+
+        document.getElementById('back-to-login').addEventListener('click', function() {
+            document.getElementById('reset-form').style.display = 'none';
+            document.getElementById('login-form').style.display = 'block';
+        });
+    </script>
 </body>
 </html>
 
