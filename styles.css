@@ -1,4 +1,4 @@
-body {
+/*body {
     font-family: Arial, sans-serif;
     padding: 20px;
     background-color: #f9f9f9;
@@ -112,7 +112,7 @@ tfoot button:hover {
 tfoot button:disabled {
     background-color: #e0e0e0;
     cursor: not-allowed;
-}
+}*/
 /*body {
     font-family: Arial, sans-serif;
     padding: 20px;
