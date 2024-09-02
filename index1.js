@@ -153,7 +153,28 @@ function StudentMarksEntry() {
                     <h2>Selected School: {selectedSchool}</h2>
                     <table>
                         <thead>
-                            {/* Table header remains the same */}
+                          <tr>
+                        <th rowSpan="2">Sno</th>
+                        <th rowSpan="2">Student Name</th>
+                        <th rowSpan="2">Pen Number</th>
+                        <th rowSpan="2">Section</th>
+                        <th colSpan="10">Telugu</th>
+                        <th colSpan="10">Hindi</th>
+                        <th colSpan="10">English</th>
+                        <th colSpan="10">Mathematics</th>
+                        <th colSpan="10">Social</th>
+                        <th rowSpan="2">Grand Total</th>
+                        <th rowSpan="2">Total Grade</th>
+                        <th rowSpan="2">GPA</th>
+                        <th rowSpan="2">Percentage</th>
+                    </tr>
+                    <tr>
+                        {["Telugu", "Hindi", "English", "Mathematics", "Social"].flatMap(subject =>
+                            ["FA1-20M", "Speaking", "Basic Knowledge", "Writing", "Corrections", "Behaviour", "Activity", "SubTotal", "Grade", "SGPA"]
+                                .map((sub, i) => <th key={`${subject}-${sub}`}>{sub}</th>)
+                                
+                        )}
+                    </tr>
                         </thead>
                         <tbody>
                             {students.map((student, index) => (
