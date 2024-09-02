@@ -1,3 +1,164 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+/* Heading styles */
+h1 {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Styling for the select dropdown */
+select {
+    padding: 10px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background-color 0.3s ease;
+}
+
+select:focus {
+    background-color: #f0f0f0;
+}
+
+/* Button styling */
+button {
+    padding: 10px 20px;
+    font-size: 1em;
+    color: #fff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+}
+
+button:disabled {
+    background-color: #e0e0e0;
+    cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
+    background-color: #45a049;
+}
+
+/* Wrapper for horizontal and vertical scrolling */
+.table-wrapper {
+    overflow-x: auto;
+    overflow-y: auto;
+    height: 500px; /* Adjust height as needed */
+    width: 100%;
+}
+
+/* Ensuring the table takes full width */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px; /* Set a minimum width to ensure proper layout */
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* General styling for table headers and cells */
+th, td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+/* Sticky Header (Main Headings and Subheadings) */
+thead th {
+    position: sticky;
+    top: 0;
+    background-color: #26bd12;
+    color: white;
+    z-index: 10;
+}
+
+tbody td:nth-child(2) /* Student Name column */ {
+    position: sticky;
+    left: 0;
+    background-color: #fff; /* Add a background color to avoid overlap issues */
+    z-index: 6;
+    min-width: 200px; /* Minimum width based on the content */
+}
+
+/* Alternating row colors */
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Input field styling (number type) */
+input[type=number] {
+    appearance: textfield;
+    width: 50px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+/* Focus style for number input */
+input[type=number]:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+/* Remove spinners in Chrome, Safari, Edge, and Opera */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Remove spinners in Firefox */
+input[type=number] {
+    appearance: textfield;
+}
+
+/* Sticky Student Name column will display according to the size of text */
+td {
+    background-color: #fdfdfd;
+}
+
+td:nth-child(odd) {
+    background-color: #f4f4f4;
+}
+
+/* Footer section */
+tfoot {
+    margin-top: 20px;
+    text-align: right;
+}
+
+tfoot button {
+    padding: 8px 15px;
+    font-size: 1em;
+    color: #fff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+tfoot button:hover {
+    background-color: #45a049;
+}
+
+tfoot button:disabled {
+    background-color: #e0e0e0;
+    cursor: not-allowed;
+}
 /*body {
     font-family: Arial, sans-serif;
     padding: 20px;
