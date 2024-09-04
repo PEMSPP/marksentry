@@ -22,7 +22,7 @@ const calculateGrade = total => {
     if (total <= 19) return 'C';
     if (total <= 29) return 'B2';
     if (total <= 39) return 'B1';
-    if (total <= 45) return 'A2';
+    if (total <= 46) return 'A2';
     return 'A1';
 };
 
@@ -40,25 +40,25 @@ function StudentMarksEntry() {
 
     useEffect(() => {
         const fetchSchoolDataFromFirebase = async (school) => {
-            const response = await axios.get(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/${school}.json`);
+            const response = await axios.get(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/schools/${school}/Class-1.json`);
             const data = response.data || [];
             return Object.keys(data).map((key, index) => ({
                 sno: index + 1,
                 studentName: data[key].studentName,
                 penNumber: data[key].penNumber,
-                section: data[key].section, // Fetch section from Firebase
+                section: data[key].section,
                 telugu: data[key].telugu || ['', '', '', '', '', '', '', 0, '', 0],
                 hindi: data[key].hindi || ['', '', '', '', '', '', '', 0, '', 0],
                 english: data[key].english || ['', '', '', '', '', '', '', 0, '', 0],
                 mathematics: data[key].mathematics || ['', '', '', '', '', '', '', 0, '', 0],
-                social: data[key].social || ['', '', '', '', '', '', '', 0, '', 0], // Updated Subjects
+                social: data[key].social || ['', '', '', '', '', '', '', 0, '', 0],
                 grandTotal: data[key].grandTotal || 0,
                 totalGrade: data[key].totalGrade || '',
                 gpa: data[key].gpa || 0,
                 percentage: data[key].percentage || 0
             }));
         };
-
+    
         const fetchAllDataFromFirebase = async () => {
             const allData = [];
             let snoCounter = 1; // Initialize SNO counter
@@ -71,7 +71,7 @@ function StudentMarksEntry() {
             }
             setStudents(allData);
         };
-
+    
         if (selectedSchool) {
             if (selectedSchool === 'ALL') {
                 fetchAllDataFromFirebase();
@@ -80,7 +80,7 @@ function StudentMarksEntry() {
             }
         }
     }, [selectedSchool]);
-
+    
     const handleInputChange = (index, subject, subIndex, value) => {
         const newStudents = [...students];
         const student = newStudents[index];
@@ -110,8 +110,31 @@ function StudentMarksEntry() {
     };
 
     const handleKeyDown = (e, index, subject, subIndex) => {
-        // Keyboard navigation logic remains the same
-        // Prevent default behavior of arrow keys and enter key
+        const rowCount = students.length;
+        const colCount = ['telugu', 'hindi', 'english', 'mathematics', 'social'].length * 10; // 10 columns per subject
+
+        if (e.key.startsWith("Arrow")) {
+            e.preventDefault(); // Prevent the default behavior (i.e., modifying the input)
+
+            let [newIndex, newSubIndex] = [index, subIndex];
+
+            if (e.key === "ArrowUp" && newIndex > 0) {
+                newIndex--;
+            } else if (e.key === "ArrowDown" && newIndex < rowCount - 1) {
+                newIndex++;
+            } else if (e.key === "ArrowLeft" && newSubIndex > 0) {
+                newSubIndex--;
+            } else if (e.key === "ArrowRight" && newSubIndex < colCount - 1) {
+                newSubIndex++;
+            }
+
+            // Move focus to the new input field
+            const newInputId = `input-${newIndex}-${subject}-${newSubIndex}`;
+            const newInput = document.getElementById(newInputId);
+            if (newInput) {
+                newInput.focus();
+            }
+        }
     };
 
     const saveDataToDatabase = () => {
@@ -124,7 +147,7 @@ function StudentMarksEntry() {
         alert('Data is saving to the database...');
     
         axios
-            .put(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/${selectedSchool}.json`, students)
+            .put(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/schools/${selectedSchool}/Class-1.json`, students)
             .then(() => {
                 // Notify the user that data is saved successfully
                 alert('Data saved successfully!');
@@ -135,10 +158,73 @@ function StudentMarksEntry() {
             });
     };
     
+    
     const saveToExcel = () => {
-        // Save to Excel logic remains the same
+        const XLSX = window.XLSX;
+        const wb = XLSX.utils.book_new();
+    
+        // Define headers for the Excel sheet
+        const headers1 = [
+            "Sno", "Student Name", "Pen Number", "Section",
+            "Telugu", "", "", "", "", "", "", "",
+            "Hindi", "", "", "", "", "", "", "",
+            "English", "", "", "", "", "", "", "",
+            "Mathematics", "", "", "", "", "", "", "",
+            "Social", "", "", "", "", "", "", "",
+            "Grand Total", "Total Grade", "GPA", "Percentage"
+        ];
+    
+        const headers2 = [
+            "", "", "", "",
+            "FA1-20M", "Speaking", "Basic Knowledge", "Writing", "Corrections", "Behaviour", "Activity", "SubTotal", "Grade", "SGPA",
+            "FA1-20M", "Speaking", "Basic Knowledge", "Writing", "Corrections", "Behaviour", "Activity", "SubTotal", "Grade", "SGPA",
+            "FA1-20M", "Speaking", "Basic Knowledge", "Writing", "Corrections", "Behaviour", "Activity", "SubTotal", "Grade", "SGPA",
+            "FA1-20M", "Speaking", "Basic Knowledge", "Writing", "Corrections", "Behaviour", "Activity", "SubTotal", "Grade", "SGPA",
+            "FA1-20M", "Speaking", "Basic Knowledge", "Writing", "Corrections", "Behaviour", "Activity", "SubTotal", "Grade", "SGPA",
+            "", "", "", ""
+        ];
+    
+        // Prepare data for the sheet
+        const ws_data = [headers1, headers2];
+    
+        // Add student data if available, else add placeholder rows
+        if (students.length > 0) {
+            students.forEach(student => {
+                ws_data.push([
+                    student.sno, student.studentName, student.penNumber, student.section,
+                    ...student.telugu,
+                    ...student.hindi,
+                    ...student.english,
+                    ...student.mathematics,
+                    ...student.social,
+                    student.grandTotal, student.totalGrade, student.gpa, student.percentage
+                ]);
+            });
+        } else {
+            // Add placeholder data if no students are available
+            ws_data.push(["No data available"]);
+        }
+    
+        const ws = XLSX.utils.aoa_to_sheet(ws_data);
+    
+        // Merge cells for the first header row where applicable
+        const mergeRanges = [
+            { s: { r: 0, c: 4 }, e: { r: 0, c: 13 } }, // Telugu: 10 columns (4-13)
+            { s: { r: 0, c: 14 }, e: { r: 0, c: 23 } }, // Hindi: 10 columns (14-23)
+            { s: { r: 0, c: 24 }, e: { r: 0, c: 33 } }, // English: 10 columns (24-33)
+            { s: { r: 0, c: 34 }, e: { r: 0, c: 43 } }, // Mathematics: 10 columns (34-43)
+            { s: { r: 0, c: 44 }, e: { r: 0, c: 53 } }  // Social: 10 columns (44-53)
+        ];
+    
+        if (!ws['!merges']) ws['!merges'] = [];
+        ws['!merges'].push(...mergeRanges);
+    
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    
+        // Save to Excel file
+        XLSX.writeFile(wb, "students_marks.xlsx");
     };
-
+    
     return (
         <div>
             <h1>Student Marks Entry</h1>
@@ -153,28 +239,27 @@ function StudentMarksEntry() {
                     <h2>Selected School: {selectedSchool}</h2>
                     <table>
                         <thead>
-                          <tr>
-                        <th rowSpan="2">Sno</th>
-                        <th rowSpan="2">Student Name</th>
-                        <th rowSpan="2">Pen Number</th>
-                        <th rowSpan="2">Section</th>
-                        <th colSpan="10">Telugu</th>
-                        <th colSpan="10">Hindi</th>
-                        <th colSpan="10">English</th>
-                        <th colSpan="10">Mathematics</th>
-                        <th colSpan="10">Social</th>
-                        <th rowSpan="2">Grand Total</th>
-                        <th rowSpan="2">Total Grade</th>
-                        <th rowSpan="2">GPA</th>
-                        <th rowSpan="2">Percentage</th>
-                    </tr>
-                    <tr>
-                        {["Telugu", "Hindi", "English", "Mathematics", "Social"].flatMap(subject =>
-                            ["FA1-20M", "Speaking", "Basic Knowledge", "Writing", "Corrections", "Behaviour", "Activity", "SubTotal", "Grade", "SGPA"]
-                                .map((sub, i) => <th key={`${subject}-${sub}`}>{sub}</th>)
-                                
-                        )}
-                    </tr>
+                            <tr>
+                                <th rowSpan="2">Sno</th>
+                                <th rowSpan="2">Student Name</th>
+                                <th rowSpan="2">Pen Number</th>
+                                <th rowSpan="2">Section</th>
+                                <th colSpan="10">Telugu</th>
+                                <th colSpan="10">Hindi</th>
+                                <th colSpan="10">English</th>
+                                <th colSpan="10">Mathematics</th>
+                                <th colSpan="10">EVS</th>
+                                <th rowSpan="2">Grand Total</th>
+                                <th rowSpan="2">Total Grade</th>
+                                <th rowSpan="2">GPA</th>
+                                <th rowSpan="2">Percentage</th>
+                            </tr>
+                            <tr>
+                                {["Telugu", "Hindi", "English", "Mathematics", "Social"].flatMap(subject =>
+                                    ["FA1-20M", "Speaking", "Basic Knowledge", "Writing", "Corrections", "Behaviour", "Activity", "SubTotal", "Grade", "SGPA"]
+                                        .map((sub, i) => <th key={`${subject}-${sub}`}>{sub}</th>)
+                                )}
+                            </tr>
                         </thead>
                         <tbody>
                             {students.map((student, index) => (
@@ -183,16 +268,20 @@ function StudentMarksEntry() {
                                     <td>{student.studentName}</td>
                                     <td>{student.penNumber}</td>
                                     <td>{student.section}</td>
-                                    {['telugu', 'hindi', 'english', 'mathematics', 'social'].map(subject =>
+                                    {['telugu', 'hindi', 'english', 'mathematics', 'social'].flatMap(subject =>
                                         student[subject].map((value, subIndex) => (
-                                            <td key={subIndex}>
-                                                <input
-                                                    id={`input-${index}-${subject}-${subIndex}`}
-                                                    type="number"
-                                                    value={value}
-                                                    onChange={e => handleInputChange(index, subject, subIndex, e.target.value)}
-                                                    onKeyDown={e => handleKeyDown(e, index, subject, subIndex)}
-                                                />
+                                            <td key={`${subject}-${subIndex}`}>
+                                                {subIndex < 7 ? (
+                                                    <input
+                                                        id={`input-${index}-${subject}-${subIndex}`}
+                                                        type="number"
+                                                        value={value}
+                                                        onChange={e => handleInputChange(index, subject, subIndex, e.target.value)}
+                                                        onKeyDown={e => handleKeyDown(e, index, subject, subIndex)}
+                                                    />
+                                                ) : (
+                                                    <span>{value}</span>
+                                                )}
                                             </td>
                                         ))
                                     )}
@@ -209,8 +298,7 @@ function StudentMarksEntry() {
             <button onClick={saveToExcel}>Save to Excel</button>
             <button onClick={saveDataToDatabase}>Save to Database</button>
         </div>
-    );
+    ); 
 }
-
 const root = createRoot(document.getElementById('root'));
 root.render(<StudentMarksEntry />);
