@@ -17,14 +17,27 @@ const maxMarks = [20, 5, 5, 5, 5, 5, 5];
 // Calculate totals, grades, and SGPA
 const calculateTotal = marks => marks.slice(0, 7).reduce((a, b) => a + Number(b), 0);
 
-const calculateGrade = total => {
-    if (total <= 9) return 'D';
-    if (total <= 19) return 'C';
-    if (total <= 29) return 'B2';
-    if (total <= 39) return 'B1';
-    if (total <= 46) return 'A2';
-    return 'A1';
+const calculateSGGrade = total => {
+    if (total >= 46) return 'A1';
+    if (total >= 41) return 'A2';
+    if (total >= 36) return 'B1';
+    if (total >= 31) return 'B2';
+    if (total >= 26) return 'C1';
+    if (total >= 21) return 'C2';
+    if (total >= 18) return 'D1';
+    return 'D2';
 };
+const calculateTotalGrade = grandTotal => {
+    if (grandTotal >= 230) return 'A1';
+    if (grandTotal >= 205) return 'A2';
+    if (grandTotal >= 180) return 'B1';
+    if (grandTotal >= 155) return 'B2';
+    if (grandTotal >= 130) return 'C1';
+    if (grandTotal >= 105) return 'C2';
+    if (grandTotal >= 90) return 'D1';
+    return 'D2';
+};
+
 
 const calculateSGPA = subTotal => (subTotal / 50 * 10).toFixed(1); // Assuming total max marks of 50
 
@@ -97,17 +110,18 @@ function StudentMarksEntry() {
     
         // Recalculate totals, grades, SGPA, etc.
         student[subject][7] = calculateTotal(student[subject]);
-        student[subject][8] = calculateGrade(student[subject][7]);
+        student[subject][8] = calculateSGGrade(student[subject][7]); // Updated to calculate SG Grade
         student[subject][9] = calculateSGPA(student[subject][7]);
     
         student.grandTotal = student.telugu[7] + student.hindi[7] + student.english[7] + student.mathematics[7] + student.social[7];
-        student.totalGrade = calculateGrade(student.grandTotal);
+        student.totalGrade = calculateTotalGrade(student.grandTotal); // Updated to calculate Total Grade
         student.gpa = calculateGPA(student.grandTotal);
         student.percentage = calculatePercentage(student.grandTotal);
     
         // Update state with the new students array
         setStudents(newStudents);
     };
+    
 
     const handleKeyDown = (e, index, subject, subIndex) => {
         const rowCount = students.length;
