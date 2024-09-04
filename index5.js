@@ -26,11 +26,11 @@ const calculateGrade = total => {
     return 'A1';
 };
 
-const calculateSGPA = subTotal => (subTotal / 50 * 10).toFixed(2); // Assuming total max marks of 50
+const calculateSGPA = subTotal => (subTotal / 50 * 10).toFixed(1); // Assuming total max marks of 50
 
-const calculateGPA = grandTotal => (grandTotal / 250 * 10).toFixed(2); // Updated assuming total max marks of 250
+const calculateGPA = grandTotal => (grandTotal / 250 * 10).toFixed(1); // Updated assuming total max marks of 250
 
-const calculatePercentage = grandTotal => ((grandTotal / 250) * 100).toFixed(2); // Updated assuming total max marks of 250
+const calculatePercentage = grandTotal => ((grandTotal / 250) * 100).toFixed(1); // Updated assuming total max marks of 250
 
 // React component
 function StudentMarksEntry() {
@@ -39,32 +39,31 @@ function StudentMarksEntry() {
     const [savedData, setSavedData] = useState({});
 
     useEffect(() => {
-        const fetchSchoolData = async (school) => {
-            const response = await fetch('studentsData5.json');
-            const data = await response.json();
-            const schoolData = data[school] || [];
-            return schoolData.map((student, index) => ({
-                ...student,
+        const fetchSchoolDataFromFirebase = async (school) => {
+            const response = await axios.get(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/schools/${school}/Class-5.json`);
+            const data = response.data || [];
+            return Object.keys(data).map((key, index) => ({
                 sno: index + 1,
-                section: student.section, // Fetch section from the data
-                telugu: ['', '', '', '', '', '', '', 0, '', 0],
-                hindi: ['', '', '', '', '', '', '', 0, '', 0],
-                english: ['', '', '', '', '', '', '', 0, '', 0],
-                mathematics: ['', '', '', '', '', '', '', 0, '', 0],
-                social: ['', '', '', '', '', '', '', 0, '', 0], // Updated Subjects
-                subject: ['FA1-20M', 'Speaking', 'Basic Knowledge', 'Writing', 'Corrections', 'Behaviour', 'Activity', 'SubTotal', 'Grade', 'SGPA'],
-                grandTotal: 0,
-                totalGrade: '',
-                gpa: 0,
-                percentage: 0
+                studentName: data[key].studentName,
+                penNumber: data[key].penNumber,
+                section: data[key].section,
+                telugu: data[key].telugu || ['', '', '', '', '', '', '', 0, '', 0],
+                hindi: data[key].hindi || ['', '', '', '', '', '', '', 0, '', 0],
+                english: data[key].english || ['', '', '', '', '', '', '', 0, '', 0],
+                mathematics: data[key].mathematics || ['', '', '', '', '', '', '', 0, '', 0],
+                social: data[key].social || ['', '', '', '', '', '', '', 0, '', 0],
+                grandTotal: data[key].grandTotal || 0,
+                totalGrade: data[key].totalGrade || '',
+                gpa: data[key].gpa || 0,
+                percentage: data[key].percentage || 0
             }));
         };
-
-        const fetchAllData = async () => {
-              const allData = [];
+    
+        const fetchAllDataFromFirebase = async () => {
+            const allData = [];
             let snoCounter = 1; // Initialize SNO counter
             for (const school of schools.slice(0, -1)) {
-                const schoolData = await fetchSchoolData(school.name);
+                const schoolData = await fetchSchoolDataFromFirebase(school.name);
                 schoolData.forEach(student => {
                     student.sno = snoCounter++; // Assign continuous SNO
                     allData.push(student);
@@ -72,16 +71,16 @@ function StudentMarksEntry() {
             }
             setStudents(allData);
         };
-
+    
         if (selectedSchool) {
             if (selectedSchool === 'ALL') {
-                fetchAllData();
+                fetchAllDataFromFirebase();
             } else {
-                fetchSchoolData(selectedSchool).then(setStudents);
+                fetchSchoolDataFromFirebase(selectedSchool).then(setStudents);
             }
         }
     }, [selectedSchool]);
-
+    
     const handleInputChange = (index, subject, subIndex, value) => {
         const newStudents = [...students];
         const student = newStudents[index];
@@ -109,7 +108,36 @@ function StudentMarksEntry() {
         // Update state with the new students array
         setStudents(newStudents);
     };
-   const saveDataToDatabase = () => {
+
+    const handleKeyDown = (e, index, subject, subIndex) => {
+        const rowCount = students.length;
+        const colCount = ['telugu', 'hindi', 'english', 'mathematics', 'social'].length * 10; // 10 columns per subject
+
+        if (e.key.startsWith("Arrow")) {
+            e.preventDefault(); // Prevent the default behavior (i.e., modifying the input)
+
+            let [newIndex, newSubIndex] = [index, subIndex];
+
+            if (e.key === "ArrowUp" && newIndex > 0) {
+                newIndex--;
+            } else if (e.key === "ArrowDown" && newIndex < rowCount - 1) {
+                newIndex++;
+            } else if (e.key === "ArrowLeft" && newSubIndex > 0) {
+                newSubIndex--;
+            } else if (e.key === "ArrowRight" && newSubIndex < colCount - 1) {
+                newSubIndex++;
+            }
+
+            // Move focus to the new input field
+            const newInputId = `input-${newIndex}-${subject}-${newSubIndex}`;
+            const newInput = document.getElementById(newInputId);
+            if (newInput) {
+                newInput.focus();
+            }
+        }
+    };
+
+    const saveDataToDatabase = () => {
         if (!selectedSchool) {
             alert('Please select a school first.');
             return;
@@ -119,7 +147,7 @@ function StudentMarksEntry() {
         alert('Data is saving to the database...');
     
         axios
-            .post(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA1-MARKS/Class-5/${selectedSchool}.json`, students)
+            .put(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/schools/${selectedSchool}/Class-5.json`, students)
             .then(() => {
                 // Notify the user that data is saved successfully
                 alert('Data saved successfully!');
@@ -130,7 +158,7 @@ function StudentMarksEntry() {
             });
     };
     
-
+    
     const saveToExcel = () => {
         const XLSX = window.XLSX;
         const wb = XLSX.utils.book_new();
@@ -199,130 +227,78 @@ function StudentMarksEntry() {
     
     return (
         <div>
-            <div>
-                <label htmlFor="school">Select School:</label>
-                <select id="school" value={selectedSchool} onChange={e => setSelectedSchool(e.target.value)}>
-                    <option value="">Select a school</option>
-                    {schools.map((school, index) => (
-                        <option key={index} value={school.name}>{school.name}</option>
-                    ))}
-                </select>
-            </div>
-
-            {students.length > 0 && (
-                <table border={1}>
-                    <thead>
-                        <tr>
-                            <th rowSpan={2}>Sno</th>
-                            <th rowSpan={2}>Student Name</th>
-                            <th rowSpan={2}>Pen Number</th>
-                            <th rowSpan={2}>Section</th>
-                            <th colSpan={10}>Telugu</th>
-                            <th colSpan={10}>Hindi</th>
-                            <th colSpan={10}>English</th>
-                            <th colSpan={10}>Mathematics</th>
-                            <th colSpan={10}>EVS</th>
-                            <th rowSpan={2}>Grand Total</th>
-                            <th rowSpan={2}>Total Grade</th>
-                            <th rowSpan={2}>GPA</th>
-                            <th rowSpan={2}>Percentage</th>
-                        </tr>
-                        <tr>
-                            <th>FA1-20M</th>
-                            <th>Speaking</th>
-                            <th>Basic Knowledge</th>
-                            <th>Writing</th>
-                            <th>Corrections</th>
-                            <th>Behaviour</th>
-                            <th>Activity</th>
-                            <th>SubTotal</th>
-                            <th>Grade</th>
-                            <th>SGPA</th>
-                            <th>FA1-20M</th>
-                            <th>Speaking</th>
-                            <th>Basic Knowledge</th>
-                            <th>Writing</th>
-                            <th>Corrections</th>
-                            <th>Behaviour</th>
-                            <th>Activity</th>
-                            <th>SubTotal</th>
-                            <th>Grade</th>
-                            <th>SGPA</th>
-                            <th>FA1-20M</th>
-                            <th>Speaking</th>
-                            <th>Basic Knowledge</th>
-                            <th>Writing</th>
-                            <th>Corrections</th>
-                            <th>Behaviour</th>
-                            <th>Activity</th>
-                            <th>SubTotal</th>
-                            <th>Grade</th>
-                            <th>SGPA</th>
-                            <th>FA1-20M</th>
-                            <th>Speaking</th>
-                            <th>Basic Knowledge</th>
-                            <th>Writing</th>
-                            <th>Corrections</th>
-                            <th>Behaviour</th>
-                            <th>Activity</th>
-                            <th>SubTotal</th>
-                            <th>Grade</th>
-                            <th>SGPA</th>
-                            <th>FA1-20M</th>
-                            <th>Speaking</th>
-                            <th>Basic Knowledge</th>
-                            <th>Writing</th>
-                            <th>Corrections</th>
-                            <th>Behaviour</th>
-                            <th>Activity</th>
-                            <th>SubTotal</th>
-                            <th>Grade</th>
-                            <th>SGPA</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {students.map((student, index) => (
-                            <tr key={index}>
-                                <td>{student.sno}</td>
-                                <td>{student.studentName}</td>
-                                <td>{student.penNumber}</td>
-                                <td>{student.section}</td>
-                                {['telugu', 'hindi', 'english', 'mathematics', 'social'].map(subject =>
-                                    student[subject].map((mark, subIndex) => (
-                                        <td key={subIndex}>
-                                            {subIndex < 7 ? (
-                                                <input
-                                                    type="number"
-                                                    value={mark}
-                                                    onChange={e =>
-                                                        handleInputChange(index, subject, subIndex, e.target.value)
-                                                    }
-                                                />
-                                            ) : (
-                                                mark
-                                            )}
-                                        </td>
-                                    ))
-                                )}
-                                <td>{student.grandTotal}</td>
-                                <td>{student.totalGrade}</td>
-                                <td>{student.gpa}</td>
-                                <td>{student.percentage}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            )}
-            {students.length > 0 && (
+            <h1>Student Marks Entry</h1>
+            <select value={selectedSchool} onChange={e => setSelectedSchool(e.target.value)}>
+                <option value="">Select School</option>
+                {schools.map(school => (
+                    <option key={school.name} value={school.name}>{school.name}</option>
+                ))}
+            </select>
+            {selectedSchool && (
                 <div>
-                    <button onClick={saveToExcel}>Save to Excel</button>
-                    <button onClick={saveDataToDatabase}>Save to Database</button>
+                    <h2>Selected School: {selectedSchool}</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th rowSpan="2">Sno</th>
+                                <th rowSpan="2">Student Name</th>
+                                <th rowSpan="2">Pen Number</th>
+                                <th rowSpan="2">Section</th>
+                                <th colSpan="10">Telugu</th>
+                                <th colSpan="10">Hindi</th>
+                                <th colSpan="10">English</th>
+                                <th colSpan="10">Mathematics</th>
+                                <th colSpan="10">EVS</th>
+                                <th rowSpan="2">Grand Total</th>
+                                <th rowSpan="2">Total Grade</th>
+                                <th rowSpan="2">GPA</th>
+                                <th rowSpan="2">Percentage</th>
+                            </tr>
+                            <tr>
+                                {["Telugu", "Hindi", "English", "Mathematics", "Social"].flatMap(subject =>
+                                    ["FA1-20M", "Speaking", "Basic Knowledge", "Writing", "Corrections", "Behaviour", "Activity", "SubTotal", "Grade", "SGPA"]
+                                        .map((sub, i) => <th key={`${subject}-${sub}`}>{sub}</th>)
+                                )}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {students.map((student, index) => (
+                                <tr key={index}>
+                                    <td>{student.sno}</td>
+                                    <td>{student.studentName}</td>
+                                    <td>{student.penNumber}</td>
+                                    <td>{student.section}</td>
+                                    {['telugu', 'hindi', 'english', 'mathematics', 'social'].flatMap(subject =>
+                                        student[subject].map((value, subIndex) => (
+                                            <td key={`${subject}-${subIndex}`}>
+                                                {subIndex < 7 ? (
+                                                    <input
+                                                        id={`input-${index}-${subject}-${subIndex}`}
+                                                        type="number"
+                                                        value={value}
+                                                        onChange={e => handleInputChange(index, subject, subIndex, e.target.value)}
+                                                        onKeyDown={e => handleKeyDown(e, index, subject, subIndex)}
+                                                    />
+                                                ) : (
+                                                    <span>{value}</span>
+                                                )}
+                                            </td>
+                                        ))
+                                    )}
+                                    <td>{student.grandTotal}</td>
+                                    <td>{student.totalGrade}</td>
+                                    <td>{student.gpa}</td>
+                                    <td>{student.percentage}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             )}
+            <button onClick={saveToExcel}>Save to Excel</button>
+            <button onClick={saveDataToDatabase}>Save to Database</button>
         </div>
-    );
+    ); 
 }
-
-// Render the component
 const root = createRoot(document.getElementById('root'));
 root.render(<StudentMarksEntry />);
