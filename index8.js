@@ -26,6 +26,18 @@ const calculateGrade = total => {
     return 'A1';
 };
 
+const calculateTotalGrade = grandTotal => {
+    if (grandTotal >= 319 && grandTotal <= 350) return 'A1';
+    if (grandtotal >= 277 && grandTotal <= 318) return 'A2';
+    if (grandTotal >= 238 && grandTotal <= 276) return 'B1';
+    if (grandTotal >= 200 && grandTotal <= 237) return 'B2';
+    if (grandTotal >= 161 && grandTotal <= 199) return 'C1';
+    if (grandTotal >= 123 && grandTotal <= 160) return 'C2';
+    if (grandTotal >= 70 && grandTotal <= 122) return 'D1';
+    if (grandTotal >= 0 && grandTotal <= 69) return 'D2';
+    return ''; // Return empty string if no grade matches
+};
+
 const calculateSGPA = subTotal => (subTotal / 50 * 10).toFixed(1); // Assuming total max marks of 50
 
 const calculateGPA = grandTotal => (grandTotal / 350 * 10).toFixed(1); // Updated assuming total max marks of 350
@@ -36,29 +48,34 @@ const calculatePercentage = grandTotal => ((grandTotal / 350) * 100).toFixed(1);
 function StudentMarksEntry() {
     const [selectedSchool, setSelectedSchool] = useState('');
     const [students, setStudents] = useState([]);
+    const [savedData, setSavedData] = useState({});
 
     useEffect(() => {
         const fetchSchoolData = async (school) => {
-            const response = await fetch('studentsData8.json');
-            const data = await response.json();
-            const schoolData = data[school] || [];
-            return schoolData.map((student, index) => ({
-                ...student,
-                sno: index + 1,
-                section: student.section, // Fetch section from the data
-                telugu: ['', '', '', '', '', 0, '', 0],
-                hindi: ['', '', '', '', '', 0, '', 0],
-                english: ['', '', '', '', '', 0, '', 0],
-                mathematics: ['', '', '', '', '', 0, '', 0],
-                pscience: ['', '', '', '', '', 0, '', 0], // Added Science
-                nscience: ['', '', '', '', '', 0, '', 0], // Changed from EVS to Social
-                social: ['', '', '', '', '', 0, '', 0], // Added Biology
-                subject: ['FA1-20M', 'Children\'s Participation', 'Written Work', 'Speaking', 'Behaviour', 'SubTotal', 'Grade', 'SGPA'],
-                grandTotal: 0,
-                totalGrade: '',
-                gpa: 0,
-                percentage: 0
-            }));
+            try {
+                const response = await axios.get(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/schools/${school}/Class-8.json`);
+                const data = response.data || [];
+                return Object.keys(data).map((key, index) => ({
+                    sno: index + 1,
+                    studentName: data[key].studentName,
+                    penNumber: data[key].penNumber,
+                    section: data[key].section,
+                    telugu: data[key].telugu || ['', '', '', '', '', 0, '', 0],
+                    hindi: data[key].hindi || ['', '', '', '', '', 0, '', 0],
+                    english: data[key].english || ['', '', '', '', '', 0, '', 0],
+                    mathematics: data[key].mathematics || ['', '', '', '', '', 0, '', 0],
+                    pscience: data[key].pscience || ['', '', '', '', '', 0, '', 0],
+                    nscience: data[key].nscience || ['', '', '', '', '', 0, '', 0],
+                    social: data[key].social || ['', '', '', '', '', 0, '', 0],
+                    grandTotal: data[key].grandTotal || 0,
+                    totalGrade: data[key].totalGrade || '',
+                    gpa: data[key].gpa || 0,
+                    percentage: data[key].percentage || 0
+                }));
+            } catch (error) {
+                console.error('Error fetching school data:', error);
+                return [];
+            }
         };
 
         const fetchAllData = async () => {
@@ -73,6 +90,7 @@ function StudentMarksEntry() {
             }
             setStudents(allData);
         };
+
         if (selectedSchool) {
             if (selectedSchool === 'ALL') {
                 fetchAllData();
@@ -86,40 +104,84 @@ function StudentMarksEntry() {
         const newStudents = [...students];
         const student = newStudents[index];
         const maxValue = maxMarks[subIndex];
-    
+
         // Validate the entered value
         if (value < 0 || value > maxValue) {
             alert(`Enter the marks according to Limit. Maximum allowed is ${maxValue}`);
             return;
         }
-    
+
         // Update the value in the corresponding field
         student[subject][subIndex] = value;
-    
+
         // Recalculate totals, grades, SGPA, etc.
         student[subject][5] = calculateTotal(student[subject]);
         student[subject][6] = calculateGrade(student[subject][5]);
         student[subject][7] = calculateSGPA(student[subject][5]);
-    
+
         student.grandTotal = student.telugu[5] + student.hindi[5] + student.english[5] + student.mathematics[5] + student.pscience[5] + student.nscience[5] + student.social[5];
         student.totalGrade = calculateGrade(student.grandTotal);
         student.gpa = calculateGPA(student.grandTotal);
         student.percentage = calculatePercentage(student.grandTotal);
-    
+
         // Update state
         setStudents(newStudents);
     };
 
-    
+    const handleKeyDown = (e, index, subject, subIndex) => {
+        const rowCount = students.length;
+        const subjects = ['telugu', 'hindi', 'english', 'mathematics', 'pscience', 'nscience', 'social'];
+        const colCount = 8; // 8 columns per subject
+
+        if (e.key.startsWith("Arrow")) {
+            e.preventDefault(); // Prevent the default behavior (i.e., modifying the input)
+
+            let [newIndex, newSubIndex, newSubject] = [index, subIndex, subject];
+
+            if (e.key === "ArrowUp" && newIndex > 0) {
+                newIndex--;
+            } else if (e.key === "ArrowDown" && newIndex < rowCount - 1) {
+                newIndex++;
+            } else if (e.key === "ArrowLeft") {
+                if (newSubIndex > 0) {
+                    newSubIndex--;
+                } else {
+                    const subjectIndex = subjects.indexOf(newSubject);
+                    if (subjectIndex > 0) {
+                        newSubject = subjects[subjectIndex - 1];
+                        newSubIndex = colCount - 1;
+                    }
+                }
+            } else if (e.key === "ArrowRight") {
+                if (newSubIndex < colCount - 1) {
+                    newSubIndex++;
+                } else {
+                    const subjectIndex = subjects.indexOf(newSubject);
+                    if (subjectIndex < subjects.length - 1) {
+                        newSubject = subjects[subjectIndex + 1];
+                        newSubIndex = 0;
+                    }
+                }
+            }
+
+            // Move focus to the new input field
+            const newInputId = `input-${newIndex}-${newSubject}-${newSubIndex}`;
+            const newInput = document.getElementById(newInputId);
+            if (newInput) {
+                newInput.focus();
+            }
+        }
+    };
+
     const saveToDatabase = async () => {
         if (!selectedSchool) {
             alert('Please select a school first.');
             return;
         }
         alert('Data is saving to the database...');
-    
+
         axios
-            .post(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/FA1-MARKS/Class-8/${selectedSchool}.json`, students)
+            .put(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/schools/${selectedSchool}/Class-8.json`, students)
             .then(() => {
                 // Notify the user that data is saved successfully
                 alert('Data saved successfully!');
@@ -128,16 +190,12 @@ function StudentMarksEntry() {
                 console.error('Error saving data:', error);
                 alert('Error saving data. Please try again.');
             });
-
     };
-    
-
-
 
     const saveToExcel = () => {
         const XLSX = window.XLSX;
         const wb = XLSX.utils.book_new();
-    
+
         // Define headers for the Excel sheet
         const headers1 = [
             "Sno", "Student Name", "Pen Number", "Section",
@@ -150,7 +208,7 @@ function StudentMarksEntry() {
             "Social", "", "", "", "", "", "", "",
             "Grand Total", "Total Grade", "GPA", "Percentage"
         ];
-    
+
         const headers2 = [
             "", "", "", "",
             "FA1-20M", "Children's Participation", "Written Work", "Speaking", "Behaviour", "SubTotal", "Grade", "SGPA",
@@ -162,73 +220,83 @@ function StudentMarksEntry() {
             "FA1-20M", "Children's Participation", "Written Work", "Speaking", "Behaviour", "SubTotal", "Grade", "SGPA",
             "", "", "", ""
         ];
-    
-        // Prepare data for the sheet
-        const ws_data = [headers1, headers2];
-    
-        students.forEach(student => {
-            ws_data.push([
-                student.sno, student.studentName, student.penNumber, student.section,
-                ...student.telugu,
-                ...student.hindi,
-                ...student.english,
-                ...student.mathematics,
-                ...student.pscience,
-                ...student.nscience,
-                ...student.social,
-                student.grandTotal, student.totalGrade, student.gpa, student.percentage
-            ]);
-        });
-    
-        const ws = XLSX.utils.aoa_to_sheet(ws_data);
-    
-        // Merge cells for the first header row where applicable
-        const mergeRanges = [
-            { s: { r: 0, c: 4 }, e: { r: 0, c: 11 } }, // Telugu
-            { s: { r: 0, c: 12 }, e: { r: 0, c: 19 } }, // Hindi
-            { s: { r: 0, c: 20 }, e: { r: 0, c: 27 } }, // English
-            { s: { r: 0, c: 28 }, e: { r: 0, c: 35 } }, // Mathematics
-            { s: { r: 0, c: 36 }, e: { r: 0, c: 43 } }, // PScience
-            { s: { r: 0, c: 44 }, e: { r: 0, c: 51 } }, // NScience
-            { s: { r: 0, c: 52 }, e: { r: 0, c: 59 } }, // Social
+
+        const data = students.map(student => [
+            student.sno,
+            student.studentName,
+            student.penNumber,
+            student.section,
+            ...student.telugu,
+            ...student.hindi,
+            ...student.english,
+            ...student.mathematics,
+            ...student.pscience,
+            ...student.nscience,
+            ...student.social,
+            student.grandTotal,
+            student.totalGrade,
+            student.gpa,
+            student.percentage
+        ]);
+
+        // Combine headers and data
+        const wsData = [headers1, headers2, ...data];
+        const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+        // Merge header cells
+        ws['!merges'] = [
+            { s: { r: 0, c: 4 }, e: { r: 0, c: 11 } },
+            { s: { r: 0, c: 12 }, e: { r: 0, c: 19 } },
+            { s: { r: 0, c: 20 }, e: { r: 0, c: 27 } },
+            { s: { r: 0, c: 28 }, e: { r: 0, c: 35 } },
+            { s: { r: 0, c: 36 }, e: { r: 0, c: 43 } },
+            { s: { r: 0, c: 44 }, e: { r: 0, c: 51 } },
+            { s: { r: 0, c: 52 }, e: { r: 0, c: 59 } },
+            { s: { r: 0, c: 60 }, e: { r: 0, c: 63 } }
         ];
-    
-        ws['!merges'] = mergeRanges;
-    
-        // Adjust column widths
-        const wscols = [
-            { wch: 5 }, { wch: 20 }, { wch: 15 }, { wch: 10 },
-            ...Array(56).fill({ wch: 12 }),
-            { wch: 12 }, { wch: 10 }, { wch: 10 }, { wch: 15 }
-        ];
-        ws['!cols'] = wscols;
-    
-        XLSX.utils.book_append_sheet(wb, ws, `${selectedSchool}_Marks`);
-        XLSX.writeFile(wb, `${selectedSchool}_Marks.xlsx`);
+
+        // Apply borders to all cells
+        const range = XLSX.utils.decode_range(ws['!ref']);
+        for (let R = range.s.r; R <= range.e.r; ++R) {
+            for (let C = range.s.c; C <= range.e.c; ++C) {
+                const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
+                if (!ws[cellAddress]) ws[cellAddress] = { t: 's', v: '' };
+                if (!ws[cellAddress].s) ws[cellAddress].s = {};
+                ws[cellAddress].s.border = {
+                    top: { style: "thin", color: { auto: 1 } },
+                    right: { style: "thin", color: { auto: 1 } },
+                    bottom: { style: "thin", color: { auto: 1 } },
+                    left: { style: "thin", color: { auto: 1 } }
+                };
+            }
+        }
+
+        // Add the sheet to the workbook
+        XLSX.utils.book_append_sheet(wb, ws, `${selectedSchool}_Data`);
+
+        // Save the workbook
+        XLSX.writeFile(wb, `${selectedSchool}_StudentData.xlsx`);
     };
-    
 
     return (
         <div>
-            <h1>Class 8 FA1 Marks Entry</h1>
-            <label>
-                Select School:
-                <select value={selectedSchool} onChange={e => setSelectedSchool(e.target.value)}>
-                    <option value="">-- Select School --</option>
-                    {schools.map((school, index) => (
-                        <option key={index} value={school.name}>{school.name}</option>
-                    ))}
-                </select>
-            </label>
+            <h1>Student Marks Entry</h1>
+            <select value={selectedSchool} onChange={e => setSelectedSchool(e.target.value)}>
+                <option value="">Select a school</option>
+                {schools.map(school => (
+                    <option key={school.name} value={school.name}>{school.name}</option>
+                ))}
+            </select>
 
-            {students.length > 0 && (
+            {selectedSchool && students.length > 0 && (
                 <div>
-                    <button onClick={saveToExcel}>Save to Excel</button>
                     <button onClick={saveToDatabase}>Save to Database</button>
-                    <table>
+                    <button onClick={saveToExcel}>Save to Excel</button>
+
+                    <table border="1">
                         <thead>
                             <tr>
-                                <th rowSpan="2">SNo</th>
+                                <th rowSpan="2">Sno</th>
                                 <th rowSpan="2">Student Name</th>
                                 <th rowSpan="2">Pen Number</th>
                                 <th rowSpan="2">Section</th>
@@ -241,28 +309,32 @@ function StudentMarksEntry() {
                                 <th rowSpan="2">Percentage</th>
                             </tr>
                             <tr>
-                                {Array(7).fill(['FA1-20M', 'Children\'s Participation', 'Written Work', 'Speaking', 'Behaviour', 'SubTotal', 'Grade', 'SGPA']).flat().map((sub, index) => (
-                                    <th key={index}>{sub}</th>
+                                {Array(7).fill(['FA1-20M', 'Children\'s Participation', 'Written Work', 'Speaking', 'Behaviour', 'SubTotal', 'Grade', 'SGPA']).flat().map(header => (
+                                    <th key={header}>{header}</th>
                                 ))}
                             </tr>
                         </thead>
                         <tbody>
                             {students.map((student, index) => (
-                                <tr key={index}>
+                                <tr key={student.penNumber}>
                                     <td>{student.sno}</td>
                                     <td>{student.studentName}</td>
                                     <td>{student.penNumber}</td>
                                     <td>{student.section}</td>
-                                    {['telugu', 'hindi', 'english', 'mathematics', 'pscience', 'nscience', 'social'].map((subject, subIndex) => (
-                                        student[subject].slice(0, 8).map((mark, i) => (
-                                            <td key={i}>
-                                                {i < 5 ? (
+                                    {['telugu', 'hindi', 'english', 'mathematics', 'pscience', 'nscience', 'social'].map(subject => (
+                                        student[subject].map((mark, subIndex) => (
+                                            <td key={`${subject}-${subIndex}`}>
+                                                {subIndex < 5 ? (
                                                     <input
                                                         type="number"
                                                         value={mark}
-                                                        onChange={e => handleInputChange(index, subject, i, e.target.value)}
+                                                        onChange={e => handleInputChange(index, subject, subIndex, e.target.value)}
+                                                        onKeyDown={e => handleKeyDown(e, index, subject, subIndex)}
+                                                        id={`input-${index}-${subject}-${subIndex}`}
                                                     />
-                                                ) : mark}
+                                                ) : (
+                                                    mark
+                                                )}
                                             </td>
                                         ))
                                     ))}
@@ -281,4 +353,5 @@ function StudentMarksEntry() {
 }
 
 // Render the component
-createRoot(document.getElementById('root')).render(<StudentMarksEntry />);
+const root = createRoot(document.getElementById('root'));
+root.render(<StudentMarksEntry />);
