@@ -18,20 +18,33 @@ const maxMarks = [20, 10, 10, 5, 5]; // FA1-20M, Children's Participation, Writt
 // Calculate totals, grades, and SGPA
 const calculateTotal = marks => marks.slice(0, 5).reduce((a, b) => a + Number(b), 0);
 
-const calculateGrade = total => {
-    if (total <= 9) return 'D';
-    if (total <= 19) return 'C';
-    if (total <= 29) return 'B2';
-    if (total <= 39) return 'B1';
-    if (total <= 45) return 'A2';
-    return 'A1';
+const calculateSGGrade = (subTotal) => {
+    if (subTotal >= 46) return 'A1';
+    if (subTotal >= 41) return 'A2';
+    if (subTotal >= 36) return 'B1';
+    if (subTotal >= 31) return 'B2';
+    if (subTotal >= 26) return 'C1';
+    if (subTotal >= 21) return 'C2';
+    if (subTotal >= 18) return 'D1';
+    return 'D2';
 };
 
-const calculateSGPA = subTotal => (subTotal / 50 * 10).toFixed(2); // Assuming total max marks of 50
+// Calculate grade for the Total Grade column based on grand total
+const calculateTotalGrade = (grandTotal) => {
+    if (grandTotal >= 273) return 'A1';
+    if (grandTotal >= 243) return 'A2';
+    if (grandTotal >= 213) return 'B1';
+    if (grandTotal >= 183) return 'B2';
+    if (grandTotal >= 153) return 'C1';
+    if (grandTotal >= 123) return 'C2';
+    if (grandTotal >= 105) return 'D1';
+    return 'D2';
+};
+const calculateSGPA = subTotal => (subTotal / 50 * 10).toFixed(1); // Assuming total max marks of 50
 
-const calculateGPA = grandTotal => (grandTotal / 300 * 10).toFixed(2); // Updated assuming total max marks of 300
+const calculateGPA = grandTotal => (grandTotal / 300 * 10).toFixed(1); // Updated assuming total max marks of 300
 
-const calculatePercentage = grandTotal => ((grandTotal / 300) * 100).toFixed(2); // Updated assuming total max marks of 300
+const calculatePercentage = grandTotal => ((grandTotal / 300) * 100).toFixed(1); // Updated assuming total max marks of 300
 
 // React component
 function StudentMarksEntry() {
@@ -101,14 +114,13 @@ function StudentMarksEntry() {
 
         // Update the value in the corresponding field
         student[subject][subIndex] = value;
-
         // Recalculate totals, grades, SGPA, etc.
         student[subject][5] = calculateTotal(student[subject]);
-        student[subject][6] = calculateGrade(student[subject][5]);
+        student[subject][6] = calculateSGGrade(student[subject][5]);
         student[subject][7] = calculateSGPA(student[subject][5]);
 
         student.grandTotal = student.telugu[5] + student.hindi[5] + student.english[5] + student.mathematics[5] + student.science[5] + student.social[5];
-        student.totalGrade = calculateGrade(student.grandTotal);
+        student.totalGrade = calculateTotalGrade(student.grandTotal);
         student.gpa = calculateGPA(student.grandTotal);
         student.percentage = calculatePercentage(student.grandTotal);
 
