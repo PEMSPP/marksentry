@@ -11,47 +11,80 @@ const schools = [
     { name: 'ALL' } // Placeholder for combined data
 ];
 
-// Maximum marks for each sub-column
-const maxMarks = [20, 10, 10, 5, 5]; // FA1-20M, Children's Participation, Written Work, Speaking, Behaviour
+// Function to get the maximum marks for each sub-column based on the subject
+const getMaxMarks = (subject, subIndex) => {
+    // Constant marks for PScience and NScience subjects
+    if (subject === 'pscience' || subject === 'nscience') {
+        const pscienceMaxMarks = [25, 10, 10, 5, 5]; // FA1-20M, Children's Participation, Written Work, Speaking, Behaviour
+        return pscienceMaxMarks[subIndex];
+    }
+
+    // Constant marks for all other subjects
+    const otherSubjectMaxMarks = [50, 10, 10, 5, 5]; // FA1-20M, Children's Participation, Written Work, Speaking, Behaviour
+    return otherSubjectMaxMarks[subIndex];
+};
 
 // Calculate totals, grades, and SGPA
 const calculateTotal = marks => marks.slice(0, 5).reduce((a, b) => a + Number(b), 0);
 
-const calculateGrade = total => {
-    if (total >= 46 && total <= 50) return 'A1';
-    if (total >= 41 && total <= 45) return 'A2';
-    if (total >= 36 && total <= 40) return 'B1';
-    if (total >= 31 && total <= 35) return 'B2';
-    if (total >= 26 && total <= 30) return 'C1';
-    if (total >= 21 && total <= 25) return 'C2';
-    if (total >= 18 && total <= 20) return 'D1';
-    if (total >= 0 && total <= 17) return 'D2';
-    return ''; // Return empty string if no grade matches
+/// Calculate grades based on subject and max marks
+const calculateGrade = (total, subject) => {
+    let grade = '';
+    const maxMarks = subject === 'pscience' || subject === 'nscience' ? 55 : 80;
+
+    // Calculate grades based on max marks for the subject
+    const thresholds = {
+        A1: maxMarks * 0.9, // 90% and above
+        A2: maxMarks * 0.8, // 80% - 89.9%
+        B1: maxMarks * 0.7, // 70% - 79.9%
+        B2: maxMarks * 0.6, // 60% - 69.9%
+        C1: maxMarks * 0.5, // 50% - 59.9%
+        C2: maxMarks * 0.4, // 40% - 49.9%
+        D1: maxMarks * 0.3, // 30% - 39.9%
+        D2: maxMarks * 0    // Below 30%
+    };
+
+    if (total >= thresholds.A1) grade = 'A1';
+    else if (total >= thresholds.A2) grade = 'A2';
+    else if (total >= thresholds.B1) grade = 'B1';
+    else if (total >= thresholds.B2) grade = 'B2';
+    else if (total >= thresholds.C1) grade = 'C1';
+    else if (total >= thresholds.C2) grade = 'C2';
+    else if (total >= thresholds.D1) grade = 'D1';
+    else grade = 'D2';
+
+    return grade;
+};
+
+
+const calculateSGPA = (subTotal, subject) => {
+    const max = subject === 'pscience' || subject === 'nscience' ? 55 : 80;
+    return ((subTotal / max) * 10).toFixed(1);
 };
 
 const calculateTotalGrade = grandTotal => {
-    if (grandTotal >= 319 && grandTotal <= 350) return 'A1';
-    if (grandTotal >= 284 && grandTotal <= 318) return 'A2';
-    if (grandTotal >= 249 && grandTotal <= 283) return 'B1';
-    if (grandTotal >= 214 && grandTotal <= 248) return 'B2';
-    if (grandTotal >= 179 && grandTotal <= 213) return 'C1';
-    if (grandTotal >= 144 && grandTotal <= 178) return 'C2';
-    if (grandTotal >= 123 && grandTotal <= 143) return 'D1';
-    if (grandTotal >= 0 && grandTotal <= 122) return 'D2';
+    // Adjust the total grades for 430 marks
+    if (grandTotal >= 387 && grandTotal <= 430) return 'A1';
+    if (grandTotal >= 344 && grandTotal <= 386) return 'A2';
+    if (grandTotal >= 301 && grandTotal <= 343) return 'B1';
+    if (grandTotal >= 258 && grandTotal <= 300) return 'B2';
+    if (grandTotal >= 215 && grandTotal <= 257) return 'C1';
+    if (grandTotal >= 172 && grandTotal <= 214) return 'C2';
+    if (grandTotal >= 129 && grandTotal <= 171) return 'D1';
+    if (grandTotal >= 0 && grandTotal <= 128) return 'D2';
     return ''; // Return empty string if no grade matches
 };
 
-const calculateSGPA = subTotal => (subTotal / 50 * 10).toFixed(1); // Assuming total max marks of 50
+// Update GPA calculation based on 430 max marks
+const calculateGPA = grandTotal => (grandTotal / 430 * 10).toFixed(1);
 
-const calculateGPA = grandTotal => (grandTotal / 350 * 10).toFixed(1); // Updated assuming total max marks of 350
-
-const calculatePercentage = grandTotal => ((grandTotal / 350) * 100).toFixed(1); // Updated assuming total max marks of 350
+// Update percentage calculation based on 430 max marks
+const calculatePercentage = grandTotal => ((grandTotal / 430) * 100).toFixed(1);
 
 // React component
 function StudentMarksEntry() {
     const [selectedSchool, setSelectedSchool] = useState('');
     const [students, setStudents] = useState([]);
-    const [savedData, setSavedData] = useState({});
 
     useEffect(() => {
         const fetchSchoolData = async (school) => {
@@ -106,7 +139,7 @@ function StudentMarksEntry() {
     const handleInputChange = (index, subject, subIndex, value) => {
         const newStudents = [...students];
         const student = newStudents[index];
-        const maxValue = maxMarks[subIndex];
+        const maxValue = getMaxMarks(subject, subIndex); // Use the new getMaxMarks function
     
         // Validate the entered value
         if (value < 0 || value > maxValue) {
@@ -119,8 +152,8 @@ function StudentMarksEntry() {
     
         // Recalculate totals, grades, SGPA, etc.
         student[subject][5] = calculateTotal(student[subject]);
-        student[subject][6] = calculateGrade(student[subject][5]); // SG calculation
-        student[subject][7] = calculateSGPA(student[subject][5]);
+        student[subject][6] = calculateGrade(student[subject][5], subject); // Pass subject to calculateGrade
+        student[subject][7] = calculateSGPA(student[subject][5], subject);
     
         student.grandTotal = student.telugu[5] + student.hindi[5] + student.english[5] + student.mathematics[5] + student.pscience[5] + student.nscience[5] + student.social[5];
         student.totalGrade = calculateTotalGrade(student.grandTotal); // Total Grade calculation
@@ -130,6 +163,7 @@ function StudentMarksEntry() {
         // Update state
         setStudents(newStudents);
     };
+
     const handleKeyDown = (e, index, subject, subIndex) => {
         const rowCount = students.length;
         const subjects = ['telugu', 'hindi', 'english', 'mathematics', 'pscience', 'nscience', 'social'];
