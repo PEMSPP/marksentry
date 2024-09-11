@@ -40,6 +40,7 @@ const calculateTotalGrade = grandTotal => {
     if (grandTotal >= 0 && grandTotal <= 122) return 'D2';
     return ''; // Return empty string if no grade matches
 };
+
 const calculateSGPA = subTotal => (subTotal / 50 * 10).toFixed(1); // Assuming total max marks of 50
 
 const calculateGPA = grandTotal => (grandTotal / 350 * 10).toFixed(1); // Updated assuming total max marks of 350
@@ -50,12 +51,13 @@ const calculatePercentage = grandTotal => ((grandTotal / 350) * 100).toFixed(1);
 function StudentMarksEntry() {
     const [selectedSchool, setSelectedSchool] = useState('');
     const [students, setStudents] = useState([]);
-    const [savedData, setSavedData] = useState({});
+    const [searchQuery, setSearchQuery] = useState(''); // For search bar input
+    const [filteredStudents, setFilteredStudents] = useState([]);
 
     useEffect(() => {
         const fetchSchoolData = async (school) => {
             try {
-                const response = await axios.get(`https://marksentry-1-cccad-default-rtdb.firebaseio.com/schools/${school}/Class-9.json`);
+                const response = await axios.get(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/schools/${school}/Class-9.json`);
                 const data = response.data || [];
                 return Object.keys(data).map((key, index) => ({
                     sno: index + 1,
@@ -91,43 +93,49 @@ function StudentMarksEntry() {
                 });
             }
             setStudents(allData);
+            setFilteredStudents(allData);
         };
 
         if (selectedSchool) {
             if (selectedSchool === 'ALL') {
                 fetchAllData();
             } else {
-                fetchSchoolData(selectedSchool).then(setStudents);
+                fetchSchoolData(selectedSchool).then(data => {
+                    setStudents(data);
+                    setFilteredStudents(data); // Set initial filtered students to all students
+                });
             }
         }
     }, [selectedSchool]);
 
+    // Handle input changes and recalculate values
     const handleInputChange = (index, subject, subIndex, value) => {
         const newStudents = [...students];
         const student = newStudents[index];
         const maxValue = maxMarks[subIndex];
-    
+
         // Validate the entered value
         if (value < 0 || value > maxValue) {
             alert(`Enter the marks according to Limit. Maximum allowed is ${maxValue}`);
             return;
         }
-    
+
         // Update the value in the corresponding field
         student[subject][subIndex] = value;
-    
+
         // Recalculate totals, grades, SGPA, etc.
         student[subject][5] = calculateTotal(student[subject]);
         student[subject][6] = calculateGrade(student[subject][5]); // SG calculation
         student[subject][7] = calculateSGPA(student[subject][5]);
-    
+
         student.grandTotal = student.telugu[5] + student.hindi[5] + student.english[5] + student.mathematics[5] + student.pscience[5] + student.nscience[5] + student.social[5];
         student.totalGrade = calculateTotalGrade(student.grandTotal); // Total Grade calculation
         student.gpa = calculateGPA(student.grandTotal);
         student.percentage = calculatePercentage(student.grandTotal);
-    
+
         // Update state
         setStudents(newStudents);
+        setFilteredStudents(newStudents); // Also update filtered students
     };
 
     const handleKeyDown = (e, index, subject, subIndex) => {
@@ -175,6 +183,24 @@ function StudentMarksEntry() {
         }
     };
 
+    // Handle search input and filtering
+    const handleSearchChange = e => {
+        const query = e.target.value;
+        setSearchQuery(query);
+
+        // Check if query contains only alphabets or only numbers (no alphanumeric allowed)
+        if (/^[a-zA-Z]+$/.test(query) || /^[0-9]+$/.test(query)) {
+            const filtered = students.filter(student =>
+                student.studentName.toLowerCase().includes(query.toLowerCase()) ||
+                student.penNumber.toString().includes(query) ||
+                student.sno.toString().includes(query)
+            );
+            setFilteredStudents(filtered);
+        } else {
+            setFilteredStudents(students); // Reset if invalid input
+        }
+    };
+
     const saveToDatabase = async () => {
         if (!selectedSchool) {
             alert('Please select a school first.');
@@ -183,7 +209,7 @@ function StudentMarksEntry() {
         alert('Data is saving to the database...');
 
         axios
-            .put(`https://marksentry-1-cccad-default-rtdb.firebaseio.com/schools/${selectedSchool}/Class-9.json`, students)
+            .put(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/schools/${selectedSchool}/Class-9.json`, students)
             .then(() => {
                 // Notify the user that data is saved successfully
                 alert('Data saved successfully!');
@@ -295,6 +321,15 @@ function StudentMarksEntry() {
                     <button onClick={saveToDatabase}>Save to Database</button>
                     <button onClick={saveToExcel}>Save to Excel</button>
 
+                    {/* Search Bar */}
+                    <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        placeholder="Search by Name, Pen Number, or SNo"
+                        style={{ margin: '10px 0' }}
+                    />
+
                     <table border="1">
                         <thead>
                             <tr>
@@ -317,7 +352,7 @@ function StudentMarksEntry() {
                             </tr>
                         </thead>
                         <tbody>
-                            {students.map((student, index) => (
+                            {filteredStudents.map((student, index) => (
                                 <tr key={student.penNumber}>
                                     <td>{student.sno}</td>
                                     <td>{student.studentName}</td>
