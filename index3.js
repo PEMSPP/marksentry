@@ -38,18 +38,16 @@ const calculateTotalGrade = grandTotal => {
     return 'D2';
 };
 
-
 const calculateSGPA = subTotal => (subTotal / 50 * 10).toFixed(1); // Assuming total max marks of 50
-
 const calculateGPA = grandTotal => (grandTotal / 250 * 10).toFixed(1); // Updated assuming total max marks of 250
-
 const calculatePercentage = grandTotal => ((grandTotal / 250) * 100).toFixed(1); // Updated assuming total max marks of 250
 
 // React component
 function StudentMarksEntry() {
     const [selectedSchool, setSelectedSchool] = useState('');
     const [students, setStudents] = useState([]);
-    const [savedData, setSavedData] = useState({});
+    const [filteredStudents, setFilteredStudents] = useState([]); // State to hold filtered student data
+    const [searchQuery, setSearchQuery] = useState(''); // Search query state
 
     useEffect(() => {
         const fetchSchoolDataFromFirebase = async (school) => {
@@ -71,7 +69,7 @@ function StudentMarksEntry() {
                 percentage: data[key].percentage || 0
             }));
         };
-    
+
         const fetchAllDataFromFirebase = async () => {
             const allData = [];
             let snoCounter = 1; // Initialize SNO counter
@@ -83,45 +81,49 @@ function StudentMarksEntry() {
                 });
             }
             setStudents(allData);
+            setFilteredStudents(allData); // Set filtered students initially to all data
         };
-    
+
         if (selectedSchool) {
             if (selectedSchool === 'ALL') {
                 fetchAllDataFromFirebase();
             } else {
-                fetchSchoolDataFromFirebase(selectedSchool).then(setStudents);
+                fetchSchoolDataFromFirebase(selectedSchool).then(data => {
+                    setStudents(data);
+                    setFilteredStudents(data); // Set filtered students initially to all data
+                });
             }
         }
     }, [selectedSchool]);
-    
+
     const handleInputChange = (index, subject, subIndex, value) => {
         const newStudents = [...students];
         const student = newStudents[index];
         const maxValue = maxMarks[subIndex];
-    
+
         // Validate the entered value
         if (value < 0 || value > maxValue) {
             alert(`Enter the marks according to Limit. Maximum allowed is ${maxValue}`);
             return;
         }
-    
+
         // Update the value in the corresponding field
         student[subject][subIndex] = value;
-    
+
         // Recalculate totals, grades, SGPA, etc.
         student[subject][7] = calculateTotal(student[subject]);
         student[subject][8] = calculateSGGrade(student[subject][7]); // Updated to calculate SG Grade
         student[subject][9] = calculateSGPA(student[subject][7]);
-    
+
         student.grandTotal = student.telugu[7] + student.hindi[7] + student.english[7] + student.mathematics[7] + student.social[7];
         student.totalGrade = calculateTotalGrade(student.grandTotal); // Updated to calculate Total Grade
         student.gpa = calculateGPA(student.grandTotal);
         student.percentage = calculatePercentage(student.grandTotal);
-    
+
         // Update state with the new students array
         setStudents(newStudents);
+        setFilteredStudents(newStudents);
     };
-    
 
     const handleKeyDown = (e, index, subject, subIndex) => {
         const rowCount = students.length;
@@ -156,10 +158,10 @@ function StudentMarksEntry() {
             alert('Please select a school first.');
             return;
         }
-    
+
         // Notify the user that data is being saved
         alert('Data is saving to the database...');
-    
+
         axios
             .put(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/schools/${selectedSchool}/Class-3.json`, students)
             .then(() => {
@@ -171,8 +173,6 @@ function StudentMarksEntry() {
                 alert('Error saving data. Please try again.');
             });
     };
-    
-    
     const saveToExcel = () => {
         const XLSX = window.XLSX;
         const wb = XLSX.utils.book_new();
@@ -221,24 +221,52 @@ function StudentMarksEntry() {
     
         const ws = XLSX.utils.aoa_to_sheet(ws_data);
     
-        // Merge cells for the first header row where applicable
-        const mergeRanges = [
-            { s: { r: 0, c: 4 }, e: { r: 0, c: 13 } }, // Telugu: 10 columns (4-13)
-            { s: { r: 0, c: 14 }, e: { r: 0, c: 23 } }, // Hindi: 10 columns (14-23)
-            { s: { r: 0, c: 24 }, e: { r: 0, c: 33 } }, // English: 10 columns (24-33)
-            { s: { r: 0, c: 34 }, e: { r: 0, c: 43 } }, // Mathematics: 10 columns (34-43)
-            { s: { r: 0, c: 44 }, e: { r: 0, c: 53 } }  // Social: 10 columns (44-53)
+        // Merge header cells for the first row where applicable
+        ws['!merges'] = [
+            { s: { r: 0, c: 4 }, e: { r: 0, c: 13 } }, // Telugu: 8 columns (4-11)
+            { s: { r: 0, c: 14 }, e: { r: 0, c: 23 } }, // Hindi: 8 columns (12-19)
+            { s: { r: 0, c: 24 }, e: { r: 0, c: 33 } }, // English: 8 columns (20-27)
+            { s: { r: 0, c: 34 }, e: { r: 0, c: 43 } }, // Mathematics: 8 columns (28-35)
+            { s: { r: 0, c: 44 }, e: { r: 0, c: 53 } }, // Social: 8 columns (36-43)
+            { s: { r: 0, c: 54 }, e: { r: 0, c: 57 } }  // Grand Total, Grade, GPA, Percentage: 4 columns (44-47)
         ];
     
-        if (!ws['!merges']) ws['!merges'] = [];
-        ws['!merges'].push(...mergeRanges);
-    
+        // Add the sheet to the workbook
         XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
     
         // Save to Excel file
         XLSX.writeFile(wb, "students_marks.xlsx");
     };
     
+    // New functionality: Search students by name, pen number, or SNO
+    const handleSearchChange = (e) => {
+        const value = e.target.value;
+        const regex = /^[a-zA-Z]+$|^\d+$/; // Allow only alphabets or only numbers, no alphanumeric
+
+        if (value === '' || regex.test(value)) {
+            setSearchQuery(value);
+        }
+    };
+
+    const handleSearch = () => {
+        if (!searchQuery) {
+            setFilteredStudents(students); // Reset to all students if no search query
+        } else {
+            const searchResult = students.filter(student =>
+                student.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                student.penNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                student.sno.toString().includes(searchQuery)
+            );
+            setFilteredStudents(searchResult);
+        }
+    };
+
+    const handleSearchKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            handleSearch();
+        }
+    };
+
     return (
         <div>
             <h1>Student Marks Entry</h1>
@@ -248,10 +276,21 @@ function StudentMarksEntry() {
                     <option key={school.name} value={school.name}>{school.name}</option>
                 ))}
             </select>
+
             {selectedSchool && (
                 <div>
                     <h2>Selected School: {selectedSchool}</h2>
-                    <table>
+
+                    {/* Search Bar */}
+                    <input
+                        type="text"
+                        placeholder="Search by Name, Pen Number, or SNO"
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        onKeyDown={handleSearchKeyDown}
+                    />
+                    
+                    <table border="1">
                         <thead>
                             <tr>
                                 <th rowSpan="2">Sno</th>
@@ -276,7 +315,7 @@ function StudentMarksEntry() {
                             </tr>
                         </thead>
                         <tbody>
-                            {students.map((student, index) => (
+                            {filteredStudents.map((student, index) => (
                                 <tr key={index}>
                                     <td>{student.sno}</td>
                                     <td>{student.studentName}</td>
@@ -309,10 +348,12 @@ function StudentMarksEntry() {
                     </table>
                 </div>
             )}
+
             <button onClick={saveToExcel}>Save to Excel</button>
             <button onClick={saveDataToDatabase}>Save to Database</button>
         </div>
     ); 
 }
+
 const root = createRoot(document.getElementById('root'));
 root.render(<StudentMarksEntry />);
