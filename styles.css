@@ -55,6 +55,22 @@ button:hover:not(:disabled) {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
+/* Search bar styling */
+input[type="text"] {
+    padding: 10px;
+    font-size: 1em;
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+    transition: border-color 0.3s ease;
+    outline: none;
+}
+
+input[type="text"]:focus {
+    border-color: #4CAF50;
+}
+
 /* Wrapper for horizontal and vertical scrolling */
 .table-wrapper {
     overflow-x: auto;
@@ -183,5 +199,11 @@ tfoot button:disabled {
     input[type=number] {
         width: 40px;
         font-size: 0.8em;
+    }
+
+    /* Search bar responsiveness */
+    input[type="text"] {
+        width: 100%;
+        font-size: 0.9em;
     }
 }
