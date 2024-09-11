@@ -51,7 +51,8 @@ const calculatePercentage = grandTotal => ((grandTotal / 350) * 100).toFixed(1);
 function StudentMarksEntry() {
     const [selectedSchool, setSelectedSchool] = useState('');
     const [students, setStudents] = useState([]);
-    const [savedData, setSavedData] = useState({});
+    const [searchQuery, setSearchQuery] = useState(''); // For search bar input
+    const [filteredStudents, setFilteredStudents] = useState([]);
 
     useEffect(() => {
         const fetchSchoolData = async (school) => {
@@ -92,45 +93,50 @@ function StudentMarksEntry() {
                 });
             }
             setStudents(allData);
+            setFilteredStudents(allData);
         };
 
         if (selectedSchool) {
             if (selectedSchool === 'ALL') {
                 fetchAllData();
             } else {
-                fetchSchoolData(selectedSchool).then(setStudents);
+                fetchSchoolData(selectedSchool).then(data => {
+                    setStudents(data);
+                    setFilteredStudents(data); // Set initial filtered students to all students
+                });
             }
         }
     }, [selectedSchool]);
 
-  // Handle input changes and recalculate values
-const handleInputChange = (index, subject, subIndex, value) => {
-    const newStudents = [...students];
-    const student = newStudents[index];
-    const maxValue = maxMarks[subIndex];
+    // Handle input changes and recalculate values
+    const handleInputChange = (index, subject, subIndex, value) => {
+        const newStudents = [...students];
+        const student = newStudents[index];
+        const maxValue = maxMarks[subIndex];
 
-    // Validate the entered value
-    if (value < 0 || value > maxValue) {
-        alert(`Enter the marks according to Limit. Maximum allowed is ${maxValue}`);
-        return;
-    }
+        // Validate the entered value
+        if (value < 0 || value > maxValue) {
+            alert(`Enter the marks according to Limit. Maximum allowed is ${maxValue}`);
+            return;
+        }
 
-    // Update the value in the corresponding field
-    student[subject][subIndex] = value;
+        // Update the value in the corresponding field
+        student[subject][subIndex] = value;
 
-    // Recalculate totals, grades, SGPA, etc.
-    student[subject][5] = calculateTotal(student[subject]);
-    student[subject][6] = calculateGrade(student[subject][5]); // SG calculation
-    student[subject][7] = calculateSGPA(student[subject][5]);
+        // Recalculate totals, grades, SGPA, etc.
+        student[subject][5] = calculateTotal(student[subject]);
+        student[subject][6] = calculateGrade(student[subject][5]); // SG calculation
+        student[subject][7] = calculateSGPA(student[subject][5]);
 
-    student.grandTotal = student.telugu[5] + student.hindi[5] + student.english[5] + student.mathematics[5] + student.pscience[5] + student.nscience[5] + student.social[5];
-    student.totalGrade = calculateTotalGrade(student.grandTotal); // Total Grade calculation
-    student.gpa = calculateGPA(student.grandTotal);
-    student.percentage = calculatePercentage(student.grandTotal);
+        student.grandTotal = student.telugu[5] + student.hindi[5] + student.english[5] + student.mathematics[5] + student.pscience[5] + student.nscience[5] + student.social[5];
+        student.totalGrade = calculateTotalGrade(student.grandTotal); // Total Grade calculation
+        student.gpa = calculateGPA(student.grandTotal);
+        student.percentage = calculatePercentage(student.grandTotal);
 
-    // Update state
-    setStudents(newStudents);
-};
+        // Update state
+        setStudents(newStudents);
+        setFilteredStudents(newStudents); // Also update filtered students
+    };
 
     const handleKeyDown = (e, index, subject, subIndex) => {
         const rowCount = students.length;
@@ -174,6 +180,24 @@ const handleInputChange = (index, subject, subIndex, value) => {
             if (newInput) {
                 newInput.focus();
             }
+        }
+    };
+
+    // Handle search input and filtering
+    const handleSearchChange = e => {
+        const query = e.target.value;
+        setSearchQuery(query);
+
+        // Check if query contains only alphabets or only numbers (no alphanumeric allowed)
+        if (/^[a-zA-Z]+$/.test(query) || /^[0-9]+$/.test(query)) {
+            const filtered = students.filter(student =>
+                student.studentName.toLowerCase().includes(query.toLowerCase()) ||
+                student.penNumber.toString().includes(query) ||
+                student.sno.toString().includes(query)
+            );
+            setFilteredStudents(filtered);
+        } else {
+            setFilteredStudents(students); // Reset if invalid input
         }
     };
 
@@ -297,6 +321,15 @@ const handleInputChange = (index, subject, subIndex, value) => {
                     <button onClick={saveToDatabase}>Save to Database</button>
                     <button onClick={saveToExcel}>Save to Excel</button>
 
+                    {/* Search Bar */}
+                    <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        placeholder="Search by Name, Pen Number, or SNo"
+                        style={{ margin: '10px 0' }}
+                    />
+
                     <table border="1">
                         <thead>
                             <tr>
@@ -319,7 +352,7 @@ const handleInputChange = (index, subject, subIndex, value) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {students.map((student, index) => (
+                            {filteredStudents.map((student, index) => (
                                 <tr key={student.penNumber}>
                                     <td>{student.sno}</td>
                                     <td>{student.studentName}</td>
