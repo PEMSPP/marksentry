@@ -41,6 +41,7 @@ const calculateTotalGrade = (grandTotal) => {
     if (grandTotal >= 105) return 'D1';
     return 'D2';
 };
+
 const calculateSGPA = subTotal => (subTotal / 50 * 10).toFixed(1); // Assuming total max marks of 50
 
 const calculateGPA = grandTotal => (grandTotal / 300 * 10).toFixed(1); // Updated assuming total max marks of 300
@@ -52,11 +53,13 @@ function StudentMarksEntry() {
     const [selectedSchool, setSelectedSchool] = useState('');
     const [students, setStudents] = useState([]);
     const [savedData, setSavedData] = useState({});
+    const [searchQuery, setSearchQuery] = useState(''); // Add search query state
+    const [filteredStudents, setFilteredStudents] = useState([]); // State for filtered students
 
     useEffect(() => {
         const fetchSchoolData = async (school) => {
             try {
-                const response = await axios.get(`https://marksentry2024-default-rtdb.firebaseio.com/2024/FA-2/schools/${school}/Class-7.json`);
+                const response = await axios.get(`https://marksentry2024-default-rtdb.firebaseio.com/2024/FA-2/schools/${selectedSchool}/Class-7.json`);
                 const data = response.data || [];
                 return Object.keys(data).map((key, index) => ({
                     sno: index + 1,
@@ -91,46 +94,52 @@ function StudentMarksEntry() {
                 });
             }
             setStudents(allData);
+            setFilteredStudents(allData); // Initialize filtered students with all data
         };
 
         if (selectedSchool) {
             if (selectedSchool === 'ALL') {
                 fetchAllData();
             } else {
-                fetchSchoolData(selectedSchool).then(setStudents);
+                fetchSchoolData(selectedSchool).then(data => {
+                    setStudents(data);
+                    setFilteredStudents(data); // Initialize filtered students with school-specific data
+                });
             }
         }
     }, [selectedSchool]);
-     // Recalculate totals, grades, SGPA, etc.
-const handleInputChange = (index, subject, subIndex, value) => {
-    const newStudents = [...students];
-    const student = newStudents[index];
-    const maxValue = maxMarks[subIndex];
 
-    // Validate the entered value
-    if (value < 0 || value > maxValue) {
-        alert(`Enter the marks according to Limit. Maximum allowed is ${maxValue}`);
-        return;
-    }
+    // Recalculate totals, grades, SGPA, etc.
+    const handleInputChange = (index, subject, subIndex, value) => {
+        const newStudents = [...students];
+        const student = newStudents[index];
+        const maxValue = maxMarks[subIndex];
 
-    // Update the value in the corresponding field
-    student[subject][subIndex] = value;
+        // Validate the entered value
+        if (value < 0 || value > maxValue) {
+            alert(`Enter the marks according to Limit. Maximum allowed is ${maxValue}`);
+            return;
+        }
 
-    // Recalculate sub-total, SG grade, and SGPA
-    student[subject][5] = calculateTotal(student[subject]);
-    student[subject][6] = calculateSGGrade(student[subject][5]); // Update SG grade calculation
-    student[subject][7] = calculateSGPA(student[subject][5]);
+        // Update the value in the corresponding field
+        student[subject][subIndex] = value;
 
-    // Recalculate grand total, total grade, GPA, and percentage
-    student.grandTotal = student.telugu[5] + student.hindi[5] + student.english[5] + student.mathematics[5] + student.science[5] + student.social[5];
-    student.totalGrade = calculateTotalGrade(student.grandTotal); // Update Total Grade calculation
-    student.gpa = calculateGPA(student.grandTotal);
-    student.percentage = calculatePercentage(student.grandTotal);
+        // Recalculate sub-total, SG grade, and SGPA
+        student[subject][5] = calculateTotal(student[subject]);
+        student[subject][6] = calculateSGGrade(student[subject][5]); // Update SG grade calculation
+        student[subject][7] = calculateSGPA(student[subject][5]);
 
-    // Update state
-    setStudents(newStudents);
-};
-    
+        // Recalculate grand total, total grade, GPA, and percentage
+        student.grandTotal = student.telugu[5] + student.hindi[5] + student.english[5] + student.mathematics[5] + student.science[5] + student.social[5];
+        student.totalGrade = calculateTotalGrade(student.grandTotal); // Update Total Grade calculation
+        student.gpa = calculateGPA(student.grandTotal);
+        student.percentage = calculatePercentage(student.grandTotal);
+
+        // Update state
+        setStudents(newStudents);
+        setFilteredStudents(newStudents); // Update filtered students
+    };
+
     const handleKeyDown = (e, index, subject, subIndex) => {
         const rowCount = students.length;
         const colCount = ['telugu', 'hindi', 'english', 'mathematics', 'social'].length * 10; // 10 columns per subject
@@ -158,7 +167,6 @@ const handleInputChange = (index, subject, subIndex, value) => {
             }
         }
     };
-
 
     const saveToDatabase = async () => {
         if (!selectedSchool) {
@@ -239,7 +247,31 @@ const handleInputChange = (index, subject, subIndex, value) => {
         XLSX.utils.book_append_sheet(wb, ws, 'Student Data');
         XLSX.writeFile(wb, 'student_data.xlsx');
     };
-   
+
+    // Handle search input change
+    const handleSearchChange = (e) => {
+        const query = e.target.value;
+
+        // Ensure input is either alphabets or numerals only
+        if (/^[a-zA-Z]*$|^[0-9]*$/.test(query)) {
+            setSearchQuery(query);
+        } else {
+            alert('Only alphabetic or numeric input is allowed.');
+        }
+    };
+
+    // Handle search functionality
+    const handleSearchKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            const filtered = students.filter(student =>
+                student.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                student.penNumber.toString().includes(searchQuery) ||
+                student.sno.toString() === searchQuery
+            );
+            setFilteredStudents(filtered); // Update filtered students list
+        }
+    };
+
     return (
         <div>
             <h1>Student Marks Entry</h1>
@@ -252,6 +284,13 @@ const handleInputChange = (index, subject, subIndex, value) => {
             {selectedSchool && (
                 <div>
                     <h2>Selected School: {selectedSchool}</h2>
+                    <input
+                        type="text"
+                        placeholder="Search by Student Name, Pen Number, or Sno"
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        onKeyPress={handleSearchKeyPress}
+                    />
                     <table>
                         <thead>
                             <tr>
@@ -278,7 +317,7 @@ const handleInputChange = (index, subject, subIndex, value) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {students.map((student, index) => (
+                            {filteredStudents.map((student, index) => (
                                 <tr key={index}>
                                     <td>{student.sno}</td>
                                     <td>{student.studentName}</td>
