@@ -358,7 +358,7 @@ function StudentMarksEntry() {
                                     <th rowSpan="2">Percentage</th>
                                 </tr>
                                 <tr>
-                                    {Array(7).fill(['FA1', 'Children\'s Participation', 'Written Work', 'Speaking', 'Behaviour', 'SubTotal', 'Grade', 'SGPA']).flat().map(header => (
+                                    {Array(7).fill(['FA2', 'Children\'s Participation', 'Written Work', 'Speaking', 'Behaviour', 'SubTotal', 'Grade', 'SGPA']).flat().map(header => (
                                         <th key={header}>{header}</th>
                                     ))}
                                 </tr>
