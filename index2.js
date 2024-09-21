@@ -331,7 +331,7 @@ function StudentMarksEntry() {
                                                         value={value}
                                                         onChange={e => handleInputChange(index, subject, subIndex, e.target.value)}
                                                         onKeyDown={e => handleKeyDown(e, index, subject, subIndex)}
-                                                        disabled={selectedSchool === 'Talaricheruvu'}
+                                                        disabled={selectedSchool === 'Talaricheruvu' || 'Boyareddypalli' || 'Mantapampalli' || 'Ganesh Pahad' || 'Tandur' || 'ALL' }
                                                     />
                                                 ) : (
                                                     <span>{value}</span>
