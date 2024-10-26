@@ -97,11 +97,10 @@ function StudentMarksEntry() {
         }
     }, [selectedSchool]);
     const handleInputChange = (index, subject, subIndex, value) => {
-       
         const newStudents = [...students];
         const student = newStudents[index];
         const maxValue = maxMarks[subIndex];
-
+    
         if (subIndex === 0) {
             if (!/^\d*$/.test(value)) {
                 alert('Please enter only numbers for Activity.');
@@ -115,33 +114,31 @@ function StudentMarksEntry() {
             student[subject][subIndex] = numericValue;
         } else if (subIndex === 1) {
             if (value === 'A' || value === '' || !isNaN(value)) {
-                student[subject][subIndex] = value;
-                if (!isNaN(value)) {
-                    const numericValue = Number(value);
-                    if (numericValue < 0 || numericValue > maxValue) {
-                        alert(`Enter the marks according to the limit. Maximum allowed is ${maxValue}`);
-                        return;
-                    }
-                    student[subject][subIndex] = numericValue;
+                const numericValue = value === '' ? '' : Number(value);
+                if (!isNaN(numericValue) && (numericValue < 0 || numericValue > maxValue)) {
+                    alert(`Enter the marks according to the limit. Maximum allowed is ${maxValue}`);
+                    return;
                 }
+                student[subject][subIndex] = numericValue || value; // Allow "A" or any valid number including 0
             } else {
                 alert('Please enter only numbers or "A" for SA1-70M.');
                 return;
             }
         }
-
+    
         student[subject][2] = calculateTotal(student[subject].map(val => isNaN(val) || val === '' ? 0 : Number(val)));
         student[subject][3] = calculateSGGrade(student[subject][2]);
         student[subject][4] = calculateSGPA(student[subject][2]);
-
+    
         student.grandTotal = student.telugu[2] + student.hindi[2] + student.english[2] + student.mathematics[2] + student.social[2];
         student.totalGrade = calculateTotalGrade(student.grandTotal);
         student.gpa = calculateGPA(student.grandTotal);
         student.percentage = calculatePercentage(student.grandTotal);
-
+    
         setStudents(newStudents);
         setFilteredStudents(newStudents);
     };
+    
     const handleKeyDown = (e, index, subject, subIndex) => {
       
         const rowCount = students.length; 
