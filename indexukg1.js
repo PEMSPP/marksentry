@@ -84,46 +84,35 @@ function StudentMarksEntry() {
         }
     }, [selectedSchool]);
 
-    const handleInputChange = (index, subject, value) => {
-        const newStudents = [...students];
-        const student = newStudents[index];
-    
-        // Validate input: only numbers or 'A' allowed, and handle empty values
-        if (value === '' || value === 'A' || (!isNaN(value) && value >= 0 && value <= maxMarks)) {
-            let finalValue = value;
-    
-            // Apply transformations if input is a two-digit number
-            if (!isNaN(value) && value.length === 4) {
-                if (subject === 'colouring' || subject === 'rhymes') {
-                    // Multiply by 4 for 'colouring' and 'rhymes'
-                    finalValue = Math.min(Number(value) * 4, maxMarks);
-                } else {
-                    // Double the value for other subjects
-                    finalValue = Math.min(Number(value) * 2, maxMarks);
-                }
-            }
-    
-            // Set the final value in the student data
-            student[subject][0] = finalValue;
-        } else {
-            alert(`Please enter a valid number (0-${maxMarks}) or "A" for absent.`);
-            return;
-        }
-    
-        // Update grand total, grade, GPA, and percentage based on the new values
-        student.grandTotal = ["telugu", "english", "mathematics", "evs", "colouring", "rhymes"].reduce((acc, subj) => {
-            return acc + (student[subj][0] === 'A' || student[subj][0] === '' ? 0 : Number(student[subj][0] || 0));
-        }, 0);
-    
-        student.totalGrade = calculateTotalGrade(student.grandTotal);
-        student.gpa = calculateGPA(student.grandTotal);
-        student.percentage = calculatePercentage(student.grandTotal);
-    
-        // Update state
-        setStudents(newStudents);
-        setFilteredStudents(newStudents);
-    };
-    
+   const handleInputChange = (index, subject, value) => {
+    const newStudents = [...students];
+    const student = newStudents[index];
+
+    // Validate input: only numbers or 'A' allowed, and handle empty values
+    if (value === '' || value === 'A' || (!isNaN(value) && value >= 0 && value <= maxMarks)) {
+        let finalValue = value;
+
+        // Set the final value in the student data without doubling or transforming
+        student[subject][0] = finalValue;
+    } else {
+        alert(`Please enter a valid number (0-${maxMarks}) or "A" for absent.`);
+        return;
+    }
+
+    // Update grand total, grade, GPA, and percentage based on the new values
+    student.grandTotal = ["telugu", "english", "mathematics", "evs", "colouring", "rhymes"].reduce((acc, subj) => {
+        return acc + (student[subj][0] === 'A' || student[subj][0] === '' ? 0 : Number(student[subj][0] || 0));
+    }, 0);
+
+    student.totalGrade = calculateTotalGrade(student.grandTotal);
+    student.gpa = calculateGPA(student.grandTotal);
+    student.percentage = calculatePercentage(student.grandTotal);
+
+    // Update state
+    setStudents(newStudents);
+    setFilteredStudents(newStudents);
+};
+
     const handleKeyDown = (e, index, subject) => {
         const subjectOrder = ["telugu", "english", "mathematics", "evs", "colouring", "rhymes"];
         const currentSubjectIndex = subjectOrder.indexOf(subject);
