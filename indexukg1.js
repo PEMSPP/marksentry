@@ -15,16 +15,17 @@ const schools = [
 const maxMarks = 100;
 
 // Grade calculation functions
-const calculateTotalGrade = grandTotal => {
-    if (grandTotal >= 360) return 'A1';
-if (grandTotal >= 320) return 'A2';
-if (grandTotal >= 280) return 'B1';
-if (grandTotal >= 240) return 'B2';
-if (grandTotal >= 200) return 'C1';
-if (grandTotal >= 160) return 'C2';
-if (grandTotal >= 120) return 'D1';
-return 'D2';
-}
+const calculateTotalGrade = (grandTotal) => {
+        if (grandTotal >= 540) return 'A1';
+        if (grandTotal >= 480) return 'A2';
+        if (grandTotal >= 420) return 'B1';
+        if (grandTotal >= 360) return 'B2';
+        if (grandTotal >= 300) return 'C1';
+        if (grandTotal >= 240) return 'C2';
+        if (grandTotal >= 180) return 'D1';
+        return 'D2';
+    };
+    
 
 const calculateGPA = grandTotal => (grandTotal / 600 * 10).toFixed(1); // Assuming total max marks of 600 across 6 subjects
 const calculatePercentage = grandTotal => ((grandTotal / 600) * 100).toFixed(1);
