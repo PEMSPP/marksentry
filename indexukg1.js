@@ -93,7 +93,7 @@ function StudentMarksEntry() {
             let finalValue = value;
     
             // Apply transformations if input is a two-digit number
-            if (!isNaN(value) && value.length === 2) {
+            if (!isNaN(value) && value.length === 4) {
                 if (subject === 'colouring' || subject === 'rhymes') {
                     // Multiply by 4 for 'colouring' and 'rhymes'
                     finalValue = Math.min(Number(value) * 4, maxMarks);
