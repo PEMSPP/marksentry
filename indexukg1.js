@@ -85,32 +85,30 @@ function StudentMarksEntry() {
         }
     }, [selectedSchool]);
 
-   const handleInputChange = (index, subject, value) => {
+const handleInputChange = (index, subject, value) => {
     const newStudents = [...students];
     const student = newStudents[index];
 
     // Validate input: only numbers or 'A' allowed, and handle empty values
     if (value === '' || value === 'A' || (!isNaN(value) && value >= 0 && value <= maxMarks)) {
-        let finalValue = value;
-              // Set the final value in the student data without doubling or transforming
+        let finalValue = value === '' ? '' : value; // Allow empty values
         student[subject][0] = finalValue;
-    else {
+
+        // Update grand total, grade, GPA, and percentage based on the new values
+        student.grandTotal = ["telugu", "english", "mathematics", "evs", "colouring", "rhymes"].reduce((acc, subj) => {
+            return acc + (student[subj][0] === 'A' || student[subj][0] === '' ? 0 : Number(student[subj][0] || 0));
+        }, 0);
+
+        student.totalGrade = calculateTotalGrade(student.grandTotal);
+        student.gpa = calculateGPA(student.grandTotal);
+        student.percentage = calculatePercentage(student.grandTotal);
+
+        // Update state
+        setStudents(newStudents);
+        setFilteredStudents(newStudents);
+    } else {
         alert(`Please enter a valid number (0-${maxMarks}) or "A" for absent.`);
-        return;
     }
-
-        }   // Update grand total, grade, GPA, and percentage based on the new values
-    student.grandTotal = ["telugu", "english", "mathematics", "evs", "colouring", "rhymes"].reduce((acc, subj) => {
-        return acc + (student[subj][0] === 'A' || student[subj][0] === '' ? 0 : Number(student[subj][0] || 0));
-    }, 0);
-
-    student.totalGrade = calculateTotalGrade(student.grandTotal);
-    student.gpa = calculateGPA(student.grandTotal);
-    student.percentage = calculatePercentage(student.grandTotal);
-
-    // Update state
-    setStudents(newStudents);
-    setFilteredStudents(newStudents);
 };
 
     const handleKeyDown = (e, index, subject) => {
