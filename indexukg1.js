@@ -100,7 +100,16 @@ function StudentMarksEntry() {
         return;
     }
 
-    // Update grand total, grade, GPA, and percentage based on the new values
+   if (value === '' || value === 'A' || (!isNaN(value) && value >= 0 && value <= maxMarks)) {
+            let finalValue = value;
+            if (!isNaN(value) && value.length === 4) {
+                finalValue = Math.min(Number(value) * 2, maxMarks);
+            }
+            student[subject][0] = finalValue;
+        } else {
+            alert(`Please enter a valid number (0-${maxMarks}) or "A" for absent.`);
+            return;
+        }   // Update grand total, grade, GPA, and percentage based on the new values
     student.grandTotal = ["telugu", "english", "mathematics", "evs", "colouring", "rhymes"].reduce((acc, subj) => {
         return acc + (student[subj][0] === 'A' || student[subj][0] === '' ? 0 : Number(student[subj][0] || 0));
     }, 0);
