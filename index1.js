@@ -8,7 +8,7 @@ const schools = [
     { name: 'Mantapampalli' },
     { name: 'Ganesh Pahad' },
     { name: 'Tandur' },
-    { name: 'ALL' }// Placeholder for combined data
+    { name: 'ALL' } // Placeholder for combined data
 ];
 
 // Maximum marks for each sub-column
@@ -51,7 +51,7 @@ function StudentMarksEntry() {
 
     useEffect(() => {
         const fetchSchoolDataFromFirebase = async (school) => {
-            const response = await axios.get(`https://marksentry2024-default-rtdb.firebaseio.com/2024/FA-1/schools/${school}/Class-1.json`);
+            const response = await axios.get(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/schools/${school}/Class-2.json`);
             const data = response.data || [];
             return Object.keys(data).map((key, index) => ({
                 sno: index + 1,
@@ -163,7 +163,7 @@ function StudentMarksEntry() {
         alert('Data is saving to the database...');
 
         axios
-            .put(`https://marksentry2024-default-rtdb.firebaseio.com/2024/FA-1/schools/${selectedSchool}/Class-1.json`, students)
+            .put(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/schools/${selectedSchool}/Class-2.json`, students)
             .then(() => {
                 // Notify the user that data is saved successfully
                 alert('Data saved successfully!');
@@ -280,8 +280,7 @@ function StudentMarksEntry() {
             {selectedSchool && (
                 <div>
                     <h2>Selected School: {selectedSchool}</h2>
-                      <button onClick={saveToExcel}>Save to Excel</button>
-                      <button onClick={saveDataToDatabase}>Save to Database</button>
+
                     {/* Search Bar */}
                     <input
                         type="text"
@@ -310,7 +309,7 @@ function StudentMarksEntry() {
                             </tr>
                             <tr>
                                 {["Telugu", "Hindi", "English", "Mathematics", "Social"].flatMap(subject =>
-                                    ["FA2-20M", "Speaking", "Basic Knowledge", "Writing", "Corrections", "Behaviour", "Activity", "SubTotal", "Grade", "SGPA"]
+                                    ["FA1-20M", "Speaking", "Basic Knowledge", "Writing", "Corrections", "Behaviour", "Activity", "SubTotal", "Grade", "SGPA"]
                                         .map((sub, i) => <th key={`${subject}-${sub}`}>{sub}</th>)
                                 )}
                             </tr>
@@ -332,7 +331,7 @@ function StudentMarksEntry() {
                                                         value={value}
                                                         onChange={e => handleInputChange(index, subject, subIndex, e.target.value)}
                                                         onKeyDown={e => handleKeyDown(e, index, subject, subIndex)}
-                                                     disabled={selectedSchool === 'Talaricheruvu' || 'Boyareddypalli' || 'Mantapampalli' || 'Ganesh Pahad' || 'Tandur' || 'ALL' }
+                                                        disabled={selectedSchool === 'Talaricheruvu' || 'Boyareddypalli' || 'Mantapampalli' || 'Ganesh Pahad' || 'Tandur' || 'ALL' }
                                                     />
                                                 ) : (
                                                     <span>{value}</span>
@@ -350,6 +349,9 @@ function StudentMarksEntry() {
                     </table>
                 </div>
             )}
+
+            <button onClick={saveToExcel}>Save to Excel</button>
+            <button onClick={saveDataToDatabase}>Save to Database</button>
         </div>
     ); 
 }
