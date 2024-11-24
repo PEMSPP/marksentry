@@ -8,7 +8,7 @@ const schools = [
     { name: 'Mantapampalli' },
     { name: 'Ganesh Pahad' },
     { name: 'Tandur' },
-    { name: 'ALL' } // Placeholder for combined data
+    { name: 'ALL' }// Placeholder for combined data
 ];
 
 // Maximum marks for each sub-column
