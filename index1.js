@@ -309,7 +309,7 @@ function StudentMarksEntry() {
                             </tr>
                             <tr>
                                 {["Telugu", "Hindi", "English", "Mathematics", "Social"].flatMap(subject =>
-                                    ["FA2-20M", "Speaking", "Basic Knowledge", "Writing", "Corrections", "Behaviour", "Activity", "SubTotal", "Grade", "SGPA"]
+                                    ["FA1-20M", "Speaking", "Basic Knowledge", "Writing", "Corrections", "Behaviour", "Activity", "SubTotal", "Grade", "SGPA"]
                                         .map((sub, i) => <th key={`${subject}-${sub}`}>{sub}</th>)
                                 )}
                             </tr>
@@ -331,7 +331,6 @@ function StudentMarksEntry() {
                                                         value={value}
                                                         onChange={e => handleInputChange(index, subject, subIndex, e.target.value)}
                                                         onKeyDown={e => handleKeyDown(e, index, subject, subIndex)}
-                                                     disabled={selectedSchool === 'Talaricheruvu' || 'Boyareddypalli' || 'Mantapampalli' || 'Ganesh Pahad' || 'Tandur' || 'ALL' }
                                                     />
                                                 ) : (
                                                     <span>{value}</span>
