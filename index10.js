@@ -80,7 +80,7 @@ function StudentMarksEntry() {
     useEffect(() => {
         const fetchSchoolData = async (school) => {
             try {
-                const response = await axios.get(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/schools/${school}/Class-10.json`);
+                const response = await axios.get(`https://marksentry2024-default-rtdb.firebaseio.com/2024/FA-1/schools/${school}/Class-10.json`);
                 const data = response.data || [];
                 return Object.keys(data).map((key, index) => ({
                     sno: index + 1,
@@ -228,7 +228,7 @@ function StudentMarksEntry() {
         alert('Data is saving to the database...');
 
         axios
-            .put(`https://marksentry-bcdd1-default-rtdb.firebaseio.com/schools/${selectedSchool}/Class-10.json`, students)
+            .put(`https://marksentry2024-default-rtdb.firebaseio.com/2024/FA-1/schools/${selectedSchool}/Class-10.json`, students)
             .then(() => {
                 alert('Data saved successfully!');
             })
@@ -358,7 +358,7 @@ function StudentMarksEntry() {
                                     <th rowSpan="2">Percentage</th>
                                 </tr>
                                 <tr>
-                                    {Array(7).fill(['FA1', 'Children\'s Participation', 'Written Work', 'Speaking', 'Behaviour', 'SubTotal', 'Grade', 'SGPA']).flat().map(header => (
+                                    {Array(7).fill(['FA2', 'Children\'s Participation', 'Written Work', 'Speaking', 'Behaviour', 'SubTotal', 'Grade', 'SGPA']).flat().map(header => (
                                         <th key={header}>{header}</th>
                                     ))}
                                 </tr>
