@@ -1,209 +1,173 @@
+/* General Styles */
 body {
     font-family: Arial, sans-serif;
-    padding: 20px;
-    background-color: #f9f9f9;
-    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
     color: #333;
+}
+
+h1 {
+    text-align: center;
+    padding: 20px 0;
+    background-color: #333333;
+    color: #fff;
     margin: 0;
 }
 
-/* Heading styles */
-h1{
-    font-size: 2em;
-    color: #333;
-    margin-bottom: 20px;
-}
-
-/* Styling for the select dropdown */
-select {
-    padding: 10px;
-    font-size: 1em;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    cursor: pointer;
-    margin-bottom: 20px;
-    transition: background-color 0.3s ease;
-}
-
-select:focus {
-    background-color: #f0f0f0;
-    border-color: #4CAF50;
-    outline: none;
-}
-
-/* Button styling */
-button {
+/* Button Styles */
+.button {
+    display: inline-block;
     padding: 10px 20px;
-    font-size: 1em;
-    color: #fff;
+    margin: 10px;
     background-color: #4CAF50;
-    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
     border-radius: 5px;
-    cursor: pointer;
-    margin-right: 10px;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    transition: background-color 0.3s;
 }
 
-button:disabled {
-    background-color: #e0e0e0;
-    cursor: not-allowed;
-}
-
-button:hover:not(:disabled) {
+.button:hover {
     background-color: #45a049;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Search bar styling */
-input[type="text"] {
-    padding: 10px;
-    font-size: 1em;
-    width: 300px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-right: 10px;
-    transition: border-color 0.3s ease;
-    outline: none;
+/* Container for buttons */
+.button-container {
+    justify-content: center;
+    padding: 15px;
 }
 
-input[type="text"]:focus {
-    border-color: #4CAF50;
+.button-container a {
+    flex: 1 0 150px;
+    margin: 10px;
+    text-align: center;
 }
 
-/* Wrapper for horizontal and vertical scrolling */
-.table-wrapper {
-    overflow-x: auto;
-    overflow-y: auto;
-    max-height: 500px; /* Adjust max height as needed */
-    width: 100%;
-    margin-bottom: 20px;
-}
-
-/* Ensuring the table takes full width */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 1000px; /* Increased minimum width for better layout */
-    background-color: #fff;
+/* Login Form Styles */
+#login-form {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* General styling for table headers and cells */
-th, td {
+#login-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#login-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+#login-form input[type="email"],
+#login-form input[type="password"] {
+    width: 100%;
     padding: 10px;
+    margin: 10px 0;
     border: 1px solid #ccc;
-    text-align: center;
-    font-size: 0.9em;
+    border-radius: 5px;
+    box-sizing: border-box;
 }
 
-/* Sticky Header (Main Headings and Subheadings) */
-thead th {
-    position: sticky;
-    top: 0;
-    background-color: #26bd12;
-    color: white;
-    z-index: 10;
-    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
-}
-
-/* Sticky column styling */
-tbody td:nth-child(2) /* Student Name column */ {
-    position: sticky;
-    left: 0;
-    background-color: #fff; /* Add a background color to avoid overlap issues */
-    z-index: 6;
-    min-width: 200px; /* Minimum width based on the content */
-    box-shadow: 2px 0 2px rgba(0, 0, 0, 0.1);
-}
-
-/* Alternating row colors */
-tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-/* Input field styling (number type) */
-input[type=number] {
-    width: 50px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    text-align: center;
-    font-size: 0.9em;
-    transition: border-color 0.3s ease;
-}
-
-/* Focus style for number input */
-input[type=number]:focus {
-    border-color: #4CAF50;
-    outline: none;
-}
-
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-    -webkit-appearance: none; 
-    margin: 0; 
-}
-
-input[type=number] {
-    -moz-appearance: textfield;
-    appearance: textfield;
-}
-
-
-/* Footer section */
-tfoot {
+#login-form button {
+    width: 100%;
+    padding: 10px;
     margin-top: 20px;
-    text-align: right;
-}
-
-tfoot button {
-    padding: 8px 15px;
-    font-size: 1em;
-    color: #fff;
     background-color: #4CAF50;
+    color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s;
 }
 
-tfoot button:hover {
+#login-form button:hover {
     background-color: #45a049;
 }
 
-tfoot button:disabled {
-    background-color: #e0e0e0;
-    cursor: not-allowed;
+/* Form Styles */
+#marks-form {
+    display: none; /* Initially hidden */
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Responsive styling for small screens */
-@media screen and (max-width: 768px) {
-    h1 {
-        font-size: 1.5em;
-    }
+#marks-form label {
+    display: block;
+    margin-bottom: 8px;
+}
 
-    select, button {
-        font-size: 0.9em;
-        padding: 8px 15px;
-    }
+#marks-form input[type="text"],
+#marks-form button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
 
-    table {
-        min-width: 800px;
-    }
+/* Flexbox for Navigation */
+nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+}
 
-    tbody td:nth-child(2) {
-        min-width: 150px;
-    }
+nav li {
+    margin: 0 15px;
+}
 
-    input[type=number] {
-        width: 40px;
-        font-size: 0.8em;
-    }
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    background-color: #333;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
 
-    /* Search bar responsiveness */
-    input[type="text"] {
-        width: 100%;
-        font-size: 0.9em;
-    }
+nav a:hover {
+    background-color: #45a049;
+}
+
+/* Sections and Classes List */
+#sections-list, #classes-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+#sections-list li, #classes-list li {
+    flex: 1 0 200px;
+    margin: 10px;
+}
+
+#sections-list button, #classes-list button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#sections-list button:hover, #classes-list button:hover {
+    background-color: #45a049;
 }
