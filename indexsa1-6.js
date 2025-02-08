@@ -262,12 +262,12 @@ function StudentMarksEntry() {
     
         const headers2 = [
             "", "", "", "",
-            "FA1-30M", "SA1-70M", "Total", "Grade", "SGPA",
-            "FA1-30M", "SA1-70M", "Total", "Grade", "SGPA",
-            "FA1-30M", "SA1-70M", "Total", "Grade", "SGPA",
-            "FA1-30M", "SA1-70M", "Total", "Grade", "SGPA",
-            "FA1-30M", "SA1-70M", "Total", "Grade", "SGPA",
-            "FA1-30M", "SA1-70M", "Total", "Grade", "SGPA",
+            "SA1-20M", "SA1-0M", "Total", "Grade", "SGPA",
+            "SA1-20M", "SA1-70M", "Total", "Grade", "SGPA",
+            "SA1-20M", "SA1-70M", "Total", "Grade", "SGPA",
+            "SA1-20M", "SA1-70M", "Total", "Grade", "SGPA",
+            "SA1-20M", "SA1-70M", "Total", "Grade", "SGPA",
+            "SA1-20M", "SA1-70M", "Total", "Grade", "SGPA",
             "", "", "", ""
         ];
     
