@@ -51,7 +51,7 @@ function StudentMarksEntry() {
 
     useEffect(() => {
         const fetchSchoolDataFromFirebase = async (school) => {
-            const response = await axios.get(`https://marksentry2024-default-rtdb.firebaseio.com/2024/FA-3/schools/${school}/Class-1.json`);
+            const response = await axios.get(`https://marks-81ffd-default-rtdb.firebaseio.com/2024/FA-3/schools/${school}/Class-1.json`);
             const data = response.data || [];
             return Object.keys(data).map((key, index) => ({
                 sno: index + 1,
@@ -163,7 +163,7 @@ function StudentMarksEntry() {
         alert('Data is saving to the database...');
 
         axios
-            .put(`https://marksentry2024-default-rtdb.firebaseio.com/2024/FA-3/schools/${selectedSchool}/Class-1.json`, students)
+            .put(`https://marks-81ffd-default-rtdb.firebaseio.com/2024/FA-3/schools/${selectedSchool}/Class-1.json`, students)
             .then(() => {
                 // Notify the user that data is saved successfully
                 alert('Data saved successfully!');
