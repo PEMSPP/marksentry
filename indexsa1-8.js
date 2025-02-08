@@ -286,13 +286,13 @@ function StudentMarksEntry() {
     
         const headers2 = [
             "", "", "", "",
-            "FA1-30M", "SA1-70M", "Total", "Grade", "SGPA",
-            "FA1-30M", "SA1-70M", "Total", "Grade", "SGPA",
-            "FA1-30M", "SA1-70M", "Total", "Grade", "SGPA",
-            "FA1-30M", "SA1-70M", "Total", "Grade", "SGPA",
-            "FA1-30M", "SA1-70M", "Total", "Grade", "SGPA",
-            "FA1-30M", "SA1-70M", "Total", "Grade", "SGPA",
-            "FA1-30M", "SA1-70M", "Total", "Grade", "SGPA",
+            "20M", "SA1-80M", "Total", "Grade", "SGPA",
+            "20M", "SA1-80M", "Total", "Grade", "SGPA",
+            "20M", "SA1-80M", "Total", "Grade", "SGPA",
+            "20M", "SA1-80M", "Total", "Grade", "SGPA",
+            "10M", "SA1-40M", "Total", "Grade", "SGPA",
+            "10M", "SA1-40M", "Total", "Grade", "SGPA",
+            "20M", "SA1-80M", "Total", "Grade", "SGPA",
             "", "", "", ""
         ];
     
@@ -410,7 +410,7 @@ function StudentMarksEntry() {
                                 {["Telugu", "Hindi", "English", "Mathematics", "P.Science", "N.Science", "Social"].map(subject => (
                                     <React.Fragment key={subject}>
                                         <th>Activity</th>
-                                        <th>SA1-80M</th>
+                                        <th>SA1</th>
                                         <th>Total</th>
                                         <th>Grade</th>
                                         <th>SGPA</th>
