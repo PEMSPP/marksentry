@@ -51,7 +51,7 @@ function StudentMarksEntry() {
 
     useEffect(() => {
         const fetchSchoolDataFromFirebase = async (school) => {
-            const response = await axios.get(`https://marksentry2024-default-rtdb.firebaseio.com/2024/FA-3/schools/${school}/Class-5.json`);
+            const response = await axios.get(`https://marksentry2024-default-rtdb.firebaseio.com/2024/FA-3/schools/${school}/Class-1.json`);
             const data = response.data || [];
             return Object.keys(data).map((key, index) => ({
                 sno: index + 1,
@@ -163,7 +163,7 @@ function StudentMarksEntry() {
         alert('Data is saving to the database...');
 
         axios
-            .put(`https://marksentry2024-default-rtdb.firebaseio.com/2024/FA-3/schools/${selectedSchool}/Class-5.json`, students)
+            .put(`https://marksentry2024-default-rtdb.firebaseio.com/2024/FA-3/schools/${selectedSchool}/Class-1.json`, students)
             .then(() => {
                 // Notify the user that data is saved successfully
                 alert('Data saved successfully!');
@@ -280,6 +280,8 @@ function StudentMarksEntry() {
             {selectedSchool && (
                 <div>
                     <h2>Selected School: {selectedSchool}</h2>
+              <button onClick={saveToExcel}>Save to Excel</button>
+            <button onClick={saveDataToDatabase}>Save to Database</button>
 
                     {/* Search Bar */}
                     <input
@@ -291,6 +293,7 @@ function StudentMarksEntry() {
                     />
                     
                     <table border="1">
+                            
                         <thead>
                             <tr>
                                 <th rowSpan="2">Sno</th>
@@ -349,8 +352,7 @@ function StudentMarksEntry() {
                 </div>
             )}
 
-            <button onClick={saveToExcel}>Save to Excel</button>
-            <button onClick={saveDataToDatabase}>Save to Database</button>
+           
         </div>
     ); 
 }
