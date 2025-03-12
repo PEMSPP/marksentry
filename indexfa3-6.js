@@ -292,6 +292,8 @@ function StudentMarksEntry() {
                         onKeyPress={handleSearchKeyPress}
                     />
                     <table>
+                            <button onClick={saveToDatabase}>Save to Database</button>
+                    <button onClick={saveToExcel}>Save to Excel</button>
                         <thead>
                             <tr>
                                 <th rowSpan="2">Sno</th>
@@ -348,8 +350,7 @@ function StudentMarksEntry() {
                             ))}
                         </tbody>
                     </table>
-                    <button onClick={saveToDatabase}>Save to Database</button>
-                    <button onClick={saveToExcel}>Save to Excel</button>
+                    
                 </div>
             )}
         </div>
