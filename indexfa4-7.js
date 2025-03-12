@@ -206,12 +206,12 @@ function StudentMarksEntry() {
 
         const headers2 = [
             "", "", "", "",
-            "FA1-20M", "Children's Participation", "Written Work", "Speaking", "Behaviour", "SubTotal", "Grade", "SGPA",
-            "FA1-20M", "Children's Participation", "Written Work", "Speaking", "Behaviour", "SubTotal", "Grade", "SGPA",
-            "FA1-20M", "Children's Participation", "Written Work", "Speaking", "Behaviour", "SubTotal", "Grade", "SGPA",
-            "FA1-20M", "Children's Participation", "Written Work", "Speaking", "Behaviour", "SubTotal", "Grade", "SGPA",
-            "FA1-20M", "Children's Participation", "Written Work", "Speaking", "Behaviour", "SubTotal", "Grade", "SGPA",
-            "FA1-20M", "Children's Participation", "Written Work", "Speaking", "Behaviour", "SubTotal", "Grade", "SGPA",
+            "FA4-20M", "Children's Participation", "Written Work", "Speaking", "Behaviour", "SubTotal", "Grade", "SGPA",
+            "FA4-20M", "Children's Participation", "Written Work", "Speaking", "Behaviour", "SubTotal", "Grade", "SGPA",
+            "FA4-20M", "Children's Participation", "Written Work", "Speaking", "Behaviour", "SubTotal", "Grade", "SGPA",
+            "FA4-20M", "Children's Participation", "Written Work", "Speaking", "Behaviour", "SubTotal", "Grade", "SGPA",
+            "FA4-20M", "Children's Participation", "Written Work", "Speaking", "Behaviour", "SubTotal", "Grade", "SGPA",
+            "FA4-20M", "Children's Participation", "Written Work", "Speaking", "Behaviour", "SubTotal", "Grade", "SGPA",
             "", "", "", ""
         ];
 
@@ -311,7 +311,7 @@ function StudentMarksEntry() {
                             </tr>
                             <tr>
                                 {['Telugu', 'Hindi', 'English', 'Mathematics', 'Science', 'Social'].flatMap(subject =>
-                                    ['FA1-20M', "Children's Participation", 'Written Work', 'Speaking', 'Behaviour', 'SubTotal', 'Grade', 'SGPA']
+                                    ['FA4-20M', "Children's Participation", 'Written Work', 'Speaking', 'Behaviour', 'SubTotal', 'Grade', 'SGPA']
                                         .map(sub => <th key={`${subject}-${sub}`}>{sub}</th>)
                                 )}
                             </tr>
