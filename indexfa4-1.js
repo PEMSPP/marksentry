@@ -280,6 +280,8 @@ function StudentMarksEntry() {
             {selectedSchool && (
                 <div>
                     <h2>Selected School: {selectedSchool}</h2>
+              <button onClick={saveToExcel}>Save to Excel</button>
+            <button onClick={saveDataToDatabase}>Save to Database</button>
 
                     {/* Search Bar */}
                     <input
@@ -349,8 +351,7 @@ function StudentMarksEntry() {
                 </div>
             )}
 
-            <button onClick={saveToExcel}>Save to Excel</button>
-            <button onClick={saveDataToDatabase}>Save to Database</button>
+            
         </div>
     ); 
 }
