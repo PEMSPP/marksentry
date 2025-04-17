@@ -6,7 +6,9 @@ const schools = [
     { name: 'Talaricheruvu' },
     { name: 'Boyareddypalli' },
     { name: 'Mantapampalli' },
-    { name: 'ALL' } // Placeholder for combined data
+    { name: 'Ganesh Pahad' },
+    { name: 'Tandur' },
+    { name: 'ALL' }
 ];
 
 // Maximum marks for each sub-column
