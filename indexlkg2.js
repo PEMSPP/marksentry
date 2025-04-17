@@ -99,7 +99,7 @@ function StudentMarksEntry() {
 
         if (value === '' || value === 'A' || (!isNaN(value) && value >= 0 && value <= maxMarks)) {
             let finalValue = value;
-            if (!isNaN(value) && value.length === 2) {
+            if (!isNaN(value) && value.length === 4) {
                 finalValue = Math.min(Number(value) * 2, maxMarks);
             }
             student[subject][0] = finalValue;
