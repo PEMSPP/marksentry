@@ -395,7 +395,7 @@ function StudentMarksEntry() {
                                                         onKeyDown={e => handleKeyDown(e, index, subject, subIndex)} 
                                                         style={{ width: '30px' }} 
                                                         disabled={selectedSchool === 'Talaricheruvu' || 'Boyareddypalli' || 'Mantapampalli' || 'Ganesh Pahad' || 'Tandur' || 'ALL' }
-                                                    />
+                                                    
                                                     />
                                                 </td>
                                             ))}
