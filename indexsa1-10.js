@@ -428,6 +428,8 @@ function StudentMarksEntry() {
                             onChange={e => handleInputChange(index, subject, 1, e.target.value)}
                             onKeyDown={e => handleKeyDown(e, index, subject, 1)}
                             style={{ width: '40px' }}
+                           disabled={selectedSchool === 'Talaricheruvu' || 'Boyareddypalli' || 'Mantapampalli' || 'Ganesh Pahad' || 'Tandur' || 'ALL' }
+                                                    
                         />
                     </td>
                     <td>{student[subject][3]}</td>
