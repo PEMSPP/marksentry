@@ -220,6 +220,7 @@ const handleInputChange = (index, subject, value) => {
                                                 onChange={e => handleInputChange(index, subject, e.target.value)}
                                                 onKeyDown={e => handleKeyDown(e, index, subject)}
                                                 style={{ width: '30px' }}
+                                                disabled={selectedSchool === 'Talaricheruvu' || 'Boyareddypalli' || 'Mantapampalli' || 'Ganesh Pahad' || 'Tandur' || 'ALL' }
                                             />
                                         </td>
                                     ))}
